@@ -10,3 +10,4 @@ export { GoldEditor } from './GoldEditor';
 export { CharacterCard } from './CharacterCard';
 export { CharacterList } from './CharacterList';
 export { AchievementEditor } from './AchievementEditor';
+export { ConfirmDialog } from './ConfirmDialog';

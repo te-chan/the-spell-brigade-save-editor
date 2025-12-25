@@ -1,14 +1,18 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Header, Button, FileDropZone, FileInfoCard } from '../components/ui';
+import { Header, Button, FileDropZone, FileInfoCard, ConfirmDialog } from '../components/ui';
 import type { FileInfo, FileLoadStatus } from '../types';
 
 // Presentational Component Props
 interface DropPageViewProps {
   fileInfo: FileInfo | null;
   loadStatus: FileLoadStatus;
+  showConfirmDialog: boolean;
   onFileDrop: (file: File) => void;
   onLoadData: () => void;
-  onExportSave: () => void;
+  onExportClick: () => void;
+  onExportConfirm: () => void;
+  onExportCancel: () => void;
   onHelpClick: () => void;
 }
 
@@ -16,13 +20,24 @@ interface DropPageViewProps {
 export function DropPageView({
   fileInfo,
   loadStatus,
+  showConfirmDialog,
   onFileDrop,
   onLoadData,
-  onExportSave,
+  onExportClick,
+  onExportConfirm,
+  onExportCancel,
   onHelpClick,
 }: DropPageViewProps) {
   const isLoading = loadStatus === 'loading';
   const isReady = loadStatus === 'ready';
+  const [copied, setCopied] = useState(false);
+  const savePath = '%USERPROFILE%\\AppData\\LocalLow\\BoltBlasterGames\\TheSpellBrigade';
+
+  const handleCopyPath = async () => {
+    await navigator.clipboard.writeText(savePath);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <div className="flex flex-col min-h-screen max-w-2xl mx-auto px-4">
@@ -42,6 +57,28 @@ export function DropPageView({
         {/* Drag and Drop Zone */}
         <section className="flex flex-col flex-1 justify-center">
           <FileDropZone onFileDrop={onFileDrop} isLoading={isLoading} />
+
+          {/* Save File Location Guide */}
+          <div className="text-center text-sm text-slate-500 dark:text-slate-400 mt-4">
+            <p className="mb-2">Save file location:</p>
+            <div className="flex items-center justify-center gap-2">
+              <code className="bg-slate-200 dark:bg-slate-700 px-3 py-1.5 rounded text-xs font-mono">
+                {savePath}
+              </code>
+              <button
+                onClick={handleCopyPath}
+                className="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                title="Copy path"
+              >
+                <span className="material-symbols-outlined text-lg">
+                  {copied ? 'check' : 'content_copy'}
+                </span>
+              </button>
+            </div>
+            <p className="mt-2 text-xs opacity-75">
+              Press Win+R → paste the path → Enter to open the folder
+            </p>
+          </div>
         </section>
 
         {/* Current File / Status Section */}
@@ -63,7 +100,7 @@ export function DropPageView({
             variant="secondary"
             size="lg"
             icon="download"
-            onClick={onExportSave}
+            onClick={onExportClick}
             disabled={!isReady}
             className="uppercase tracking-wide"
           >
@@ -72,6 +109,16 @@ export function DropPageView({
         </section>
         <div className="h-6" />
       </main>
+
+      <ConfirmDialog
+        isOpen={showConfirmDialog}
+        title="Warning"
+        message="This data may cause unexpected game behavior or significantly disrupt your game experience. Also, this data does not represent your actual skill. Do you acknowledge this?"
+        confirmLabel="I Understand"
+        cancelLabel="Cancel"
+        onConfirm={onExportConfirm}
+        onCancel={onExportCancel}
+      />
     </div>
   );
 }
@@ -87,11 +134,25 @@ interface DropPageProps {
 // Container Component (データ管理 + ナビゲーション)
 export function DropPage({ fileInfo, loadStatus, onFileDrop, onExportSave }: DropPageProps) {
   const navigate = useNavigate();
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   const handleLoadData = () => {
     if (loadStatus === 'ready') {
       navigate('/edit');
     }
+  };
+
+  const handleExportClick = () => {
+    setShowConfirmDialog(true);
+  };
+
+  const handleExportConfirm = () => {
+    setShowConfirmDialog(false);
+    onExportSave();
+  };
+
+  const handleExportCancel = () => {
+    setShowConfirmDialog(false);
   };
 
   const handleHelpClick = () => {
@@ -103,9 +164,12 @@ export function DropPage({ fileInfo, loadStatus, onFileDrop, onExportSave }: Dro
     <DropPageView
       fileInfo={fileInfo}
       loadStatus={loadStatus}
+      showConfirmDialog={showConfirmDialog}
       onFileDrop={onFileDrop}
       onLoadData={handleLoadData}
-      onExportSave={onExportSave}
+      onExportClick={handleExportClick}
+      onExportConfirm={handleExportConfirm}
+      onExportCancel={handleExportCancel}
       onHelpClick={handleHelpClick}
     />
   );

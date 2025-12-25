@@ -1,13 +1,17 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Header, Button, Card, GoldEditor, CharacterList, AchievementEditor } from '../components/ui';
+import { Header, Button, Card, GoldEditor, CharacterList, AchievementEditor, ConfirmDialog } from '../components/ui';
 import type { SaveData } from '../types';
 
 // Presentational Component Props
 interface EditPageViewProps {
   saveData: SaveData;
   hasChanges: boolean;
+  showConfirmDialog: boolean;
   onBack: () => void;
-  onSave: () => void;
+  onSaveClick: () => void;
+  onSaveConfirm: () => void;
+  onSaveCancel: () => void;
   onReset: () => void;
   onGoldChange: (gold: number) => void;
   onCharacterLevelChange: (characterId: string, level: number) => void;
@@ -18,8 +22,11 @@ interface EditPageViewProps {
 export function EditPageView({
   saveData,
   hasChanges,
+  showConfirmDialog,
   onBack,
-  onSave,
+  onSaveClick,
+  onSaveConfirm,
+  onSaveCancel,
   onReset,
   onGoldChange,
   onCharacterLevelChange,
@@ -34,7 +41,7 @@ export function EditPageView({
           <Button
             variant="primary"
             size="md"
-            onClick={onSave}
+            onClick={onSaveClick}
             disabled={!hasChanges}
           >
             Save
@@ -98,6 +105,16 @@ export function EditPageView({
           </button>
         </div>
       )}
+
+      <ConfirmDialog
+        isOpen={showConfirmDialog}
+        title="Warning"
+        message="This data may cause unexpected game behavior or significantly disrupt your game experience. Also, this data does not represent your actual skill. Do you acknowledge this?"
+        confirmLabel="I Understand"
+        cancelLabel="Cancel"
+        onConfirm={onSaveConfirm}
+        onCancel={onSaveCancel}
+      />
     </div>
   );
 }
@@ -124,9 +141,23 @@ export function EditPage({
   onAchievementToggle,
 }: EditPageProps) {
   const navigate = useNavigate();
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   const handleBack = () => {
     navigate('/');
+  };
+
+  const handleSaveClick = () => {
+    setShowConfirmDialog(true);
+  };
+
+  const handleSaveConfirm = () => {
+    setShowConfirmDialog(false);
+    onSave();
+  };
+
+  const handleSaveCancel = () => {
+    setShowConfirmDialog(false);
   };
 
   if (!saveData) {
@@ -147,8 +178,11 @@ export function EditPage({
     <EditPageView
       saveData={saveData}
       hasChanges={hasChanges}
+      showConfirmDialog={showConfirmDialog}
       onBack={handleBack}
-      onSave={onSave}
+      onSaveClick={handleSaveClick}
+      onSaveConfirm={handleSaveConfirm}
+      onSaveCancel={handleSaveCancel}
       onReset={onReset}
       onGoldChange={onGoldChange}
       onCharacterLevelChange={onCharacterLevelChange}

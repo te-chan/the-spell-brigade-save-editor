@@ -18,17 +18,20 @@ export function Button({
   icon,
   children,
   className = '',
+  disabled,
   ...props
 }: ButtonProps) {
   return (
     <button
       className={`
         flex items-center justify-center gap-2 rounded-xl font-bold
-        active:scale-95 transition-all
+        transition-all
+        ${disabled ? 'opacity-50 cursor-not-allowed' : 'active:scale-95'}
         ${variantStyles[variant]}
         ${sizeStyles[size]}
         ${className}
       `}
+      disabled={disabled}
       {...props}
     >
       {icon && <span className="material-symbols-outlined">{icon}</span>}
