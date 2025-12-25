@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+/* Enable dark mode with class strategy */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-primary: #135bec;
+  --color-primary-hover: #1d6bf5;
+  --color-background-light: #f6f6f8;
+  --color-background-dark: #101622;
+  --color-surface-dark: #1a1d24;
+  --color-surface-card: #192233;
+  --color-surface-border: #324467;
+  --color-text-muted: #92a4c9;
+
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body: "Noto Sans", sans-serif;
+}
+
+/* Base styles */
+body {
+  background-color: var(--color-background-dark);
+  color: white;
+  font-family: var(--font-display);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  margin: 0;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+/* Number input arrows hide */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Range slider styling */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 9999px;
+  background-color: var(--color-primary);
+  margin-top: -6px;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 0.5rem;
+  border-radius: 0.5rem;
+  background-color: #101622;
+}

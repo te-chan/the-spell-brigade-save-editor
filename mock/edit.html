@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>The-Spell-Brigade Save Editor</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+            extend: {
+                colors: {
+                "primary": "#135bec",
+                "background-light": "#f6f6f8",
+                "background-dark": "#101622",
+                },
+                fontFamily: {
+                "display": ["Space Grotesk", "sans-serif"],
+                "body": ["Noto Sans", "sans-serif"]
+                },
+                borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for better mobile feel */
+        ::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display antialiased selection:bg-primary/30">
+<div class="relative flex h-full min-h-screen w-full flex-col max-w-md mx-auto overflow-x-hidden border-x border-slate-200 dark:border-slate-800">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 flex items-center bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md p-4 pb-2 justify-between border-b border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-3 flex-1">
+<button class="flex items-center justify-center w-8 h-8 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 truncate">Save Editor</h2>
+</div>
+<div class="flex items-center justify-end pl-4">
+<button class="bg-primary hover:bg-primary/90 text-white text-sm font-bold px-4 py-2 rounded-lg shadow-lg shadow-primary/20 active:scale-95 transition-all">
+                    Save
+                </button>
+</div>
+</header>
+<main class="flex-1 pb-24">
+<!-- Resources Section Header -->
+<div class="px-4 pb-2 pt-6 flex items-center justify-between">
+<h3 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">Global Resources</h3>
+<span class="text-xs font-medium text-slate-500 dark:text-slate-400 bg-slate-200 dark:bg-slate-800 px-2 py-1 rounded">Read-only metadata</span>
+</div>
+<!-- Coin Input Card -->
+<div class="px-4 py-2">
+<div class="bg-white dark:bg-[#192233] p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800">
+<label class="flex flex-col gap-3">
+<div class="flex justify-between items-center">
+<p class="text-slate-700 dark:text-slate-200 text-base font-bold leading-normal flex items-center gap-2">
+<span class="material-symbols-outlined text-amber-400 filled">monetization_on</span>
+                                Gold Coins
+                            </p>
+<span class="text-xs text-primary font-medium cursor-pointer hover:underline">Max out</span>
+</div>
+<div class="relative flex w-full items-stretch">
+<!-- Decrement Button -->
+<button class="absolute left-1 top-1 bottom-1 w-10 flex items-center justify-center rounded-md bg-slate-100 dark:bg-[#232f48] text-slate-500 dark:text-slate-400 hover:text-primary active:bg-slate-200 dark:active:bg-[#324467] z-10 transition-colors">
+<span class="material-symbols-outlined text-lg">remove</span>
+</button>
+<input class="form-input flex w-full flex-1 resize-none rounded-lg text-center font-mono text-lg font-bold text-slate-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-slate-200 dark:border-[#324467] bg-slate-50 dark:bg-[#101622] h-12 placeholder:text-slate-400 p-0" inputmode="numeric" pattern="[0-9]*" type="number" value="12500"/>
+<!-- Increment Button -->
+<button class="absolute right-1 top-1 bottom-1 w-10 flex items-center justify-center rounded-md bg-slate-100 dark:bg-[#232f48] text-slate-500 dark:text-slate-400 hover:text-primary active:bg-slate-200 dark:active:bg-[#324467] z-10 transition-colors">
+<span class="material-symbols-outlined text-lg">add</span>
+</button>
+</div>
+<div class="flex justify-between text-xs text-slate-500 dark:text-slate-400 px-1">
+<span>Min: 0</span>
+<span>Max: 999,999</span>
+</div>
+</label>
+</div>
+</div>
+<!-- Divider -->
+<div class="h-6"></div>
+<!-- Brigade Members Header -->
+<div class="sticky top-[60px] z-40 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm px-4 py-3 border-b border-slate-200 dark:border-slate-800/50 mb-2">
+<div class="flex justify-between items-end">
+<h3 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">Brigade Members</h3>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">3 Active</p>
+</div>
+</div>
+<!-- Character List -->
+<div class="flex flex-col gap-3 px-4">
+<!-- Character Card 1 -->
+<div class="group relative overflow-hidden rounded-xl bg-white dark:bg-[#192233] p-4 shadow-sm border border-slate-200 dark:border-slate-800 transition-all hover:border-primary/50 dark:hover:border-primary/50">
+<div class="absolute top-0 right-0 p-2 opacity-50">
+<span class="material-symbols-outlined text-slate-300 dark:text-slate-600 text-6xl rotate-12 select-none">local_fire_department</span>
+</div>
+<div class="relative z-10 flex gap-4">
+<!-- Avatar -->
+<div class="h-16 w-16 shrink-0 rounded-lg bg-cover bg-center shadow-inner border border-slate-200 dark:border-slate-700" data-alt="Digital illustration of a fire mage character icon" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCE1Xi32B4Dr23UHBYMzRIBb9Ay3ZMcXJHm4ZTHpf5rqaOjuM1i9yBa_y0QXI_lewG_xcX7owKLlha6Oiyx0j4QxltG1I5rolZ6gkZ9NxRcMaBjGZ9knS3Ti95ugOvjTiz6MlhnP8FKZi27ceepFMJDgm9c5jgKUNI4ztHbF5vofKPzDvcO30sTyUvInK8t060OWjLRKES9-bVAtvuVEmAQrRSW_YQwcT6TfGFFdncMLUvngdea8r8JS0AeDnBO3eXhq9UFeydlVq3B');">
+</div>
+<div class="flex flex-1 flex-col justify-center gap-1">
+<h4 class="text-base font-bold text-slate-900 dark:text-white">Ignis the Pyromancer</h4>
+<p class="text-xs font-medium text-slate-500 dark:text-[#92a4c9]">Class: Mage • ID: #001</p>
+</div>
+</div>
+<div class="relative z-10 mt-5 space-y-3">
+<div class="flex items-center justify-between">
+<label class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Level</label>
+<span class="text-xs font-medium text-primary bg-primary/10 px-2 py-0.5 rounded">Max 99</span>
+</div>
+<div class="flex items-center gap-4">
+<!-- Slider Container -->
+<div class="flex-1 relative h-6 flex items-center">
+<input class="w-full h-2 bg-slate-200 dark:bg-[#101622] rounded-lg appearance-none cursor-pointer accent-primary focus:outline-none focus:ring-2 focus:ring-primary/50" max="99" min="1" type="range" value="45"/>
+</div>
+<!-- Number Input -->
+<div class="w-16">
+<input class="w-full rounded-md border border-slate-200 dark:border-[#324467] bg-slate-50 dark:bg-[#101622] px-2 py-1 text-center text-sm font-bold text-slate-900 dark:text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none" max="99" min="1" type="number" value="45"/>
+</div>
+</div>
+</div>
+</div>
+<!-- Character Card 2 -->
+<div class="group relative overflow-hidden rounded-xl bg-white dark:bg-[#192233] p-4 shadow-sm border border-slate-200 dark:border-slate-800 transition-all hover:border-primary/50 dark:hover:border-primary/50">
+<div class="absolute top-0 right-0 p-2 opacity-50">
+<span class="material-symbols-outlined text-slate-300 dark:text-slate-600 text-6xl rotate-12 select-none">water_drop</span>
+</div>
+<div class="relative z-10 flex gap-4">
+<div class="h-16 w-16 shrink-0 rounded-lg bg-cover bg-center shadow-inner border border-slate-200 dark:border-slate-700" data-alt="Abstract blue water texture representing a water mage" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAj6AEmtnxuTlXaw8sFwmiEggvdAQx5WKYBH4gs1SuN9RcE3HIO4NwYJnOowNoVFS56w4VTXIGUnp7miiBVgEHEfEponQ3NSyRlBcMHEVGDHv-QgP4mBIGCYzxNB1XR_S2xiBEs8s5dmmqtZX2T993SL6iFKiic1gIAiwkzcAZNmkXtHsNtyE3zYNfKetKXHZkM3NQ8967lkk8-nLpPDSfoMpUGha5GZF0jCry4DgxIjZoGhLMyOHBlrL9EQUEV6lru1a94o160K_vi');">
+</div>
+<div class="flex flex-1 flex-col justify-center gap-1">
+<h4 class="text-base font-bold text-slate-900 dark:text-white">Aqua Streamline</h4>
+<p class="text-xs font-medium text-slate-500 dark:text-[#92a4c9]">Class: Healer • ID: #004</p>
+</div>
+</div>
+<div class="relative z-10 mt-5 space-y-3">
+<div class="flex items-center justify-between">
+<label class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Level</label>
+<span class="text-xs font-medium text-primary bg-primary/10 px-2 py-0.5 rounded">Max 99</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex-1 relative h-6 flex items-center">
+<input class="w-full h-2 bg-slate-200 dark:bg-[#101622] rounded-lg appearance-none cursor-pointer accent-primary focus:outline-none focus:ring-2 focus:ring-primary/50" max="99" min="1" type="range" value="12"/>
+</div>
+<div class="w-16">
+<input class="w-full rounded-md border border-slate-200 dark:border-[#324467] bg-slate-50 dark:bg-[#101622] px-2 py-1 text-center text-sm font-bold text-slate-900 dark:text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none" max="99" min="1" type="number" value="12"/>
+</div>
+</div>
+</div>
+</div>
+<!-- Character Card 3 (Maxed Out Example) -->
+<div class="group relative overflow-hidden rounded-xl bg-white dark:bg-[#192233] p-4 shadow-sm border border-slate-200 dark:border-slate-800 transition-all hover:border-primary/50 dark:hover:border-primary/50">
+<div class="absolute top-0 right-0 p-2 opacity-50">
+<span class="material-symbols-outlined text-amber-500/20 text-6xl rotate-12 select-none">bolt</span>
+</div>
+<div class="relative z-10 flex gap-4">
+<div class="h-16 w-16 shrink-0 rounded-lg bg-cover bg-center shadow-inner border border-amber-500/30" data-alt="Starry texture representing a cosmic wizard" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAS__641ogrBrmSScwcrCWfpZqevw71oTeKVSJByvOrkXzGdA0pD7Un_rI-RyoPjzJULOOHUDZS2Ls-JMQXvEJuQm_HFJR0eDt42lT5JqAZlkN0K6UH6EIoc6xVc-7okqpPgW-mzjnPtN-SyOG3mIlR0XSenyOiBQha4UujQAPvnFDslAY3UShO6uxgnyUnHkD-E_Wa599foPpoDS3yzTQp7Rs59Hk4meXvQJtSJfa3dVjKau79LZ35EdBKotj1U3evkIPL2crLL8-5');">
+</div>
+<div class="flex flex-1 flex-col justify-center gap-1">
+<div class="flex items-center gap-2">
+<h4 class="text-base font-bold text-slate-900 dark:text-white">Volt Sparkweaver</h4>
+<span class="material-symbols-outlined text-amber-500 text-sm" title="Max Level">star</span>
+</div>
+<p class="text-xs font-medium text-slate-500 dark:text-[#92a4c9]">Class: Sorcerer • ID: #007</p>
+</div>
+</div>
+<div class="relative z-10 mt-5 space-y-3">
+<div class="flex items-center justify-between">
+<label class="text-xs font-bold uppercase tracking-wider text-amber-500">Max Level Reached</label>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex-1 relative h-6 flex items-center">
+<input class="w-full h-2 bg-amber-500/20 rounded-lg appearance-none cursor-pointer accent-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50" max="99" min="1" type="range" value="99"/>
+</div>
+<div class="w-16">
+<input class="w-full rounded-md border border-amber-500/30 bg-amber-500/10 px-2 py-1 text-center text-sm font-bold text-amber-500 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none" max="99" min="1" type="number" value="99"/>
+</div>
+</div>
+</div>
+</div>
+<!-- Add New Prompt -->
+<button class="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 bg-transparent p-4 text-sm font-medium text-slate-500 dark:text-slate-400 hover:border-primary hover:text-primary hover:bg-slate-50 dark:hover:bg-[#192233] transition-all">
+<span class="material-symbols-outlined">add_circle</span>
+                    Add Character Slot (Coming Soon)
+                </button>
+</div>
+<div class="h-10"></div>
+</main>
+<!-- Floating Bottom Bar (Optional, good for mobile) -->
+<div class="fixed bottom-6 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
+<div class="flex items-center gap-2 rounded-full bg-slate-900/90 dark:bg-white/10 backdrop-blur-md px-5 py-2.5 shadow-xl ring-1 ring-white/10 pointer-events-auto transform transition-transform active:scale-95 cursor-pointer hover:bg-slate-800 dark:hover:bg-white/20">
+<span class="material-symbols-outlined text-white text-xl">restart_alt</span>
+<span class="text-sm font-bold text-white">Reset Changes</span>
+</div>
+</div>
+</div>
+</body></html>

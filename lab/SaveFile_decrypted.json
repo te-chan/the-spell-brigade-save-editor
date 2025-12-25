@@ -1,0 +1,310 @@
+{
+	"0" : {
+		"__type" : "PlayerSaveData,Runtime",
+		"value" : {
+			"VersionNumber" : "0.13.0.11826",
+			"PlayTimeInMinutes" : 152,
+			"Gold" : 11523,
+			"GoldSpentInStoreRerolls" : 0,
+			"LevelForUpgrades" : {0:1,10:2,7:3,8:4
+			},
+			"ProgressForChallenges" : {1:{
+					"Value" : 1,
+					"IsCompleted" : true
+				},2:{
+					"Value" : 5,
+					"IsCompleted" : true
+				},3:{
+					"Value" : 15,
+					"IsCompleted" : true
+				},4:{
+					"Value" : 12,
+					"IsCompleted" : true
+				},5:{
+					"Value" : 12,
+					"IsCompleted" : true
+				},6:{
+					"Value" : 1,
+					"IsCompleted" : true
+				},7:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},8:{
+					"Value" : 1,
+					"IsCompleted" : true
+				},9:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},10:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},11:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},12:{
+					"Value" : 2,
+					"IsCompleted" : true
+				},13:{
+					"Value" : 7,
+					"IsCompleted" : true
+				},14:{
+					"Value" : 10,
+					"IsCompleted" : false
+				},15:{
+					"Value" : 180,
+					"IsCompleted" : true
+				},16:{
+					"Value" : 111,
+					"IsCompleted" : false
+				},17:{
+					"Value" : 30,
+					"IsCompleted" : true
+				},18:{
+					"Value" : 15,
+					"IsCompleted" : false
+				},19:{
+					"Value" : 15,
+					"IsCompleted" : false
+				},20:{
+					"Value" : 189,
+					"IsCompleted" : false
+				},21:{
+					"Value" : 189,
+					"IsCompleted" : false
+				},22:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},23:{
+					"Value" : 189,
+					"IsCompleted" : false
+				},24:{
+					"Value" : 9,
+					"IsCompleted" : false
+				},25:{
+					"Value" : 200000,
+					"IsCompleted" : true
+				},26:{
+					"Value" : 1,
+					"IsCompleted" : false
+				},27:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},28:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},29:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},30:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},31:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},32:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},33:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},34:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},35:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},36:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},37:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},38:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},39:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},40:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},41:{
+					"Value" : 15,
+					"IsCompleted" : false
+				},42:{
+					"Value" : 4,
+					"IsCompleted" : true
+				},43:{
+					"Value" : 80,
+					"IsCompleted" : true
+				},44:{
+					"Value" : 201,
+					"IsCompleted" : true
+				},45:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},46:{
+					"Value" : 111,
+					"IsCompleted" : false
+				},47:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},48:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},49:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},50:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},51:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},52:{
+					"Value" : 189,
+					"IsCompleted" : false
+				},53:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},54:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},55:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},56:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},57:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},58:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},59:{
+					"Value" : 1,
+					"IsCompleted" : true
+				},60:{
+					"Value" : 1,
+					"IsCompleted" : true
+				},61:{
+					"Value" : 13,
+					"IsCompleted" : false
+				},62:{
+					"Value" : 15,
+					"IsCompleted" : false
+				},63:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},64:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},65:{
+					"Value" : 111,
+					"IsCompleted" : false
+				},66:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},67:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},68:{
+					"Value" : 278,
+					"IsCompleted" : false
+				},69:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},70:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},71:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},72:{
+					"Value" : 1,
+					"IsCompleted" : true
+				},73:{
+					"Value" : 10,
+					"IsCompleted" : false
+				},74:{
+					"Value" : 111,
+					"IsCompleted" : false
+				},75:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},76:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},77:{
+					"Value" : 15,
+					"IsCompleted" : false
+				},78:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},79:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},80:{
+					"Value" : 1,
+					"IsCompleted" : true
+				},81:{
+					"Value" : 12,
+					"IsCompleted" : true
+				},82:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},83:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},84:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},85:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},86:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},87:{
+					"Value" : 0,
+					"IsCompleted" : false
+				},88:{
+					"Value" : 1,
+					"IsCompleted" : true
+				}
+			},
+			"RankProgressPerCharacter" : {0:{
+					"CurrentRank" : 10,
+					"ProgressTowardsNextRank" : 0
+				},2:{
+					"CurrentRank" : 1,
+					"ProgressTowardsNextRank" : 0
+				},1:{
+					"CurrentRank" : 1,
+					"ProgressTowardsNextRank" : 0
+				},3:{
+					"CurrentRank" : 1,
+					"ProgressTowardsNextRank" : 0
+				}
+			},
+			"NumberOfAttemptedRuns" : 6,
+			"HasSeenFeedbackPopUp" : false,
+			"SelectedCharacter" : 1,
+			"SelectedSkinPerCharacter" : {0:0,2:9,1:3
+			},
+			"HasPlayedDemo" : false,
+			"HasRecordedDemoConversionEvent" : false,
+			"HasClearedSaveData" : false,
+			"ActiveCharacterBonuses" : [
+				{
+					"<TargetCharacterId>k__BackingField" : 2,
+					"<BonusType>k__BackingField" : 0,
+					"TargetCharacterId" : 2,
+					"BonusType" : 0
+				}
+			],
+			"HasReceivedOneTimeGoldBonusForShowcaseVersion" : false
+		}
+	}
+}

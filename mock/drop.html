@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>The-Spell-Brigade Save Editor</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "primary-hover": "#1d6bf5",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                        "surface-dark": "#1a1d24",
+                        "surface-border": "#324467",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen flex flex-col font-display antialiased overflow-x-hidden text-slate-900 dark:text-white">
+<!-- Top App Bar -->
+<header class="sticky top-0 z-50 flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between border-b border-gray-200 dark:border-white/5">
+<div class="text-slate-900 dark:text-white flex size-12 shrink-0 items-center justify-center cursor-pointer rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</div>
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">Save Editor</h2>
+<div class="flex size-12 items-center justify-center">
+<button class="flex items-center justify-center rounded-full size-10 hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-slate-900 dark:text-white">
+<span class="material-symbols-outlined text-2xl">help</span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col p-4 w-full max-w-md mx-auto h-full">
+<!-- Drag and Drop Zone -->
+<section class="flex flex-col flex-1 min-h-[320px] justify-center">
+<div class="relative group cursor-pointer flex flex-col items-center justify-center gap-6 rounded-xl border-2 border-dashed border-surface-border hover:border-primary hover:bg-primary/5 transition-all duration-300 px-6 py-12 h-full">
+<!-- Icon Circle -->
+<div class="size-20 rounded-full bg-surface-dark flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+<span class="material-symbols-outlined text-primary text-4xl">cloud_upload</span>
+</div>
+<div class="flex max-w-[480px] flex-col items-center gap-2 z-10">
+<p class="text-slate-900 dark:text-white text-xl font-bold leading-tight tracking-[-0.015em] text-center">Drop your .sav file here</p>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-normal leading-normal text-center">or tap to browse your device</p>
+</div>
+<button class="flex min-w-[120px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-6 bg-surface-dark border border-surface-border text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary hover:border-primary transition-colors shadow-md">
+<span class="truncate">Select File</span>
+</button>
+<!-- Visual Background Pattern (Abstract) -->
+<div class="absolute inset-0 opacity-0 group-hover:opacity-10 pointer-events-none transition-opacity duration-500 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-repeat rounded-lg"></div>
+</div>
+</section>
+<!-- Current File / Status Section -->
+<section class="mt-6 mb-4">
+<div class="flex items-center justify-between mb-3 px-1">
+<h3 class="text-slate-900 dark:text-white text-sm font-bold uppercase tracking-wider opacity-70">Current File</h3>
+<span class="text-xs text-primary font-medium">Ready</span>
+</div>
+<!-- ListItem Component: File Selected State -->
+<div class="flex items-center gap-4 bg-white dark:bg-surface-dark px-4 py-3 rounded-lg border border-gray-200 dark:border-surface-border shadow-sm">
+<div class="flex items-center gap-4 flex-1">
+<div class="text-white flex items-center justify-center rounded-lg bg-primary/20 shrink-0 size-12">
+<span class="material-symbols-outlined text-primary">description</span>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-slate-900 dark:text-white text-base font-medium leading-normal line-clamp-1 font-display">save_brigade_01.sav</p>
+<div class="flex items-center gap-2">
+<p class="text-slate-500 dark:text-[#92a4c9] text-xs font-normal leading-normal">245 KB</p>
+<span class="size-1 rounded-full bg-slate-400 dark:bg-slate-600"></span>
+<p class="text-slate-500 dark:text-[#92a4c9] text-xs font-normal leading-normal">Modified: Today 10:42 AM</p>
+</div>
+</div>
+</div>
+<div class="shrink-0">
+<button class="text-emerald-500 flex size-8 items-center justify-center rounded-full hover:bg-emerald-500/10 transition-colors">
+<span class="material-symbols-outlined text-2xl">check_circle</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Action Buttons Group -->
+<section class="grid grid-cols-2 gap-4 mt-auto pt-4">
+<!-- Load Button -->
+<button class="flex-1 flex items-center justify-center gap-2 h-14 rounded-xl bg-primary hover:bg-primary-hover active:scale-95 transition-all shadow-lg shadow-primary/25 text-white font-display font-bold text-base tracking-wide uppercase">
+<span class="material-symbols-outlined">data_object</span>
+                Load Data
+            </button>
+<!-- Output Button (Secondary) -->
+<button class="flex-1 flex items-center justify-center gap-2 h-14 rounded-xl bg-white dark:bg-surface-dark border border-gray-200 dark:border-surface-border hover:bg-gray-50 dark:hover:bg-[#232f48] active:scale-95 transition-all text-slate-900 dark:text-white font-display font-bold text-base tracking-wide uppercase">
+<span class="material-symbols-outlined">download</span>
+                Export Save
+            </button>
+</section>
+<div class="h-6"></div>
+</main>
+</body></html>

@@ -1,0 +1,704 @@
+Desc: Challenge_Revive
+Reward Name: Artifact_10_Title
+Type Entry: Reward_Type_Artifact
+Action Entry: Reward_Action_Artifact
+Index: 24
+TargetValue: 10
+Category: RELICS
+--------------------
+Desc: Challenge_DieXTimes
+Reward Name: Artifact_11_Title
+Type Entry: Reward_Type_Artifact
+Action Entry: Reward_Action_Artifact
+Index: 41
+TargetValue: 30
+Category: RELICS
+--------------------
+Desc: Challenge_CompleteObjectives
+Reward Name: Artifact_12_Title
+Type Entry: Reward_Type_Artifact
+Action Entry: Reward_Action_Artifact
+Index: 42
+TargetValue: 4
+Category: RELICS
+--------------------
+Desc: Challenge_CharacterArmor
+Reward Name: Artifact_13_Title
+Type Entry: Reward_Type_Artifact
+Action Entry: Reward_Action_Artifact
+Index: 43
+TargetValue: 80
+Category: RELICS
+--------------------
+Desc: Challenge_CharacterCriticalDamage
+Reward Name: Artifact_14_Title
+Type Entry: Reward_Type_Artifact
+Action Entry: Reward_Action_Artifact
+Index: 44
+TargetValue: 201
+Category: RELICS
+--------------------
+Desc: Challenge_4SpellsWithDifferentElements
+Reward Name: Artifact_15_Title
+Type Entry: Reward_Type_Artifact
+Action Entry: Reward_Action_Artifact
+Index: 45
+TargetValue: 1
+Category: RELICS
+--------------------
+Desc: Challenge_StandStill
+Reward Name: Artifact_16_Title
+Type Entry: Reward_Type_Artifact
+Action Entry: Reward_Action_Artifact
+Index: 68
+TargetValue: 900
+Category: RELICS
+--------------------
+Desc: Challenge_HealFromLowHealth
+Reward Name: Artifact_17_Title
+Type Entry: Reward_Type_Artifact
+Action Entry: Reward_Action_Artifact
+Index: 69
+TargetValue: 1
+Category: RELICS
+--------------------
+Desc: Challenge_CollectPotionsWithinTimeFrame
+Reward Name: Artifact_18_Title
+Type Entry: Reward_Type_Artifact
+Action Entry: Reward_Action_Artifact
+Index: 70
+TargetValue: 1
+Category: RELICS
+--------------------
+Desc: Challenge_LevelUpsWithinTimeFrame
+Reward Name: Artifact_19_Title
+Type Entry: Reward_Type_Artifact
+Action Entry: Reward_Action_Artifact
+Index: 71
+TargetValue: 1
+Category: RELICS
+--------------------
+Desc: Challenge_DestroyBossWithoutLuckImprovements
+Reward Name: Artifact_20_Title
+Type Entry: Reward_Type_Artifact
+Action Entry: Reward_Action_Artifact
+Index: 72
+TargetValue: 1
+Category: RELICS
+--------------------
+Desc: Challenge_SaveRerollCommonStore
+Reward Name: Artifact_8_Title
+Type Entry: Reward_Type_Artifact
+Action Entry: Reward_Action_Artifact
+Index: 22
+TargetValue: 5
+Category: RELICS
+--------------------
+Desc: Challenge_LevelUp
+Reward Name: Artifact_9_Title
+Type Entry: Reward_Type_Artifact
+Action Entry: Reward_Action_Artifact
+Index: 23
+TargetValue: 500
+Category: RELICS
+--------------------
+Desc: Challenge_DefeatToadBoss
+Reward Name:
+Type Entry:
+Action Entry:
+Index: 80
+TargetValue: 1
+Category: MICS
+--------------------
+Desc: Challenge_EquipSpell
+Reward Name: Character_BirdMage
+Type Entry: Reward_Type_Character
+Action Entry: Reward_Action_Character
+Index: 62
+TargetValue: 50
+Category: WIZARDS
+--------------------
+Desc: Challenge_EquipSpell
+Reward Name: Character_Campanelli
+Type Entry: Reward_Type_Character
+Action Entry: Reward_Action_Character
+Index: 19
+TargetValue: 86
+Category: WIZARDS
+--------------------
+Desc: Challenge_PlayMinute
+Reward Name: Character_FluteMage
+Type Entry: Reward_Type_Character
+Action Entry: Reward_Action_Character
+Index: 74
+TargetValue: 400
+Category: WIZARDS
+--------------------
+Desc: Challenge_LevelUp
+Reward Name: Character_Hatty
+Type Entry: Reward_Type_Character
+Action Entry: Reward_Action_Character
+Index: 20
+TargetValue: 600
+Category: WIZARDS
+--------------------
+Desc: Challenge_PlayMinute
+Reward Name: Character_KeyMage
+Type Entry: Reward_Type_Character
+Action Entry: Reward_Action_Character
+Index: 16
+TargetValue: 240
+Category: WIZARDS
+--------------------
+Desc: Challenge_EquipSpell
+Reward Name: Character_Ludwig
+Type Entry: Reward_Type_Character
+Action Entry: Reward_Action_Character
+Index: 18
+TargetValue: 36
+Category: WIZARDS
+--------------------
+Desc: Challenge_LevelUp
+Reward Name: Character_MoonMage
+Type Entry: Reward_Type_Character
+Action Entry: Reward_Action_Character
+Index: 15
+TargetValue: 180
+Category: WIZARDS
+--------------------
+Desc: Challenge_PlayMinute
+Reward Name: Character_PlantMage
+Type Entry: Reward_Type_Character
+Action Entry: Reward_Action_Character
+Index: 65
+TargetValue: 343
+Category: WIZARDS
+--------------------
+Desc: Challenge_LevelUp
+Reward Name: Character_Smithy
+Type Entry: Reward_Type_Character
+Action Entry: Reward_Action_Character
+Index: 52
+TargetValue: 360
+Category: WIZARDS
+--------------------
+Desc: Challenge_PlayMinute
+Reward Name: Character_StarMage
+Type Entry: Reward_Type_Character
+Action Entry: Reward_Action_Character
+Index: 46
+TargetValue: 273
+Category: WIZARDS
+--------------------
+Desc: Challenge_PlayMinute
+Reward Name: Character_SunMage
+Type Entry: Reward_Type_Character
+Action Entry: Reward_Action_Character
+Index: 17
+TargetValue: 30
+Category: WIZARDS
+--------------------
+Desc: Challenge_EquipSpell
+Reward Name: Character_VampireMage
+Type Entry: Reward_Type_Character
+Action Entry: Reward_Action_Character
+Index: 77
+TargetValue: 75
+Category: WIZARDS
+--------------------
+Desc: Challenge_LevelUp
+Reward Name: Character_WizardKing
+Type Entry: Reward_Type_Character
+Action Entry: Reward_Action_Character
+Index: 21
+TargetValue: 1111
+Category: WIZARDS
+--------------------
+Desc: Challenge_Complete_World_4_Nightmare
+Reward Name:
+Type Entry:
+Action Entry:
+Index: 84
+TargetValue: 1
+Category: MISSION
+--------------------
+Desc: Challenge_Complete_World_2_Nightmare
+Reward Name:
+Type Entry:
+Action Entry:
+Index: 50
+TargetValue: 1
+Category: MISSION
+--------------------
+Desc: Challenge_Complete_World_3_Nightmare
+Reward Name:
+Type Entry:
+Action Entry:
+Index: 51
+TargetValue: 1
+Category: MISSION
+--------------------
+Desc: Challenge_Complete_World_1_Nightmare
+Reward Name:
+Type Entry:
+Action Entry:
+Index: 49
+TargetValue: 1
+Category: MISSION
+--------------------
+Desc: Challenge_Complete_World_4_Normal
+Reward Name: Reward_World_4_Hard
+Type Entry: Reward_Type_Difficulty
+Action Entry: Reward_Action_Difficulty
+Index: 82
+TargetValue: 1
+Category: MISSION
+--------------------
+Desc: Challenge_Complete_World_4_Hard
+Reward Name: Reward_World_4_Nightmare
+Type Entry: Reward_Type_Difficulty
+Action Entry: Reward_Action_Difficulty
+Index: 83
+TargetValue: 1
+Category: MISSION
+--------------------
+Desc: Challenge_Complete_World_2_Normal
+Reward Name: Reward_World_2_Hard
+Type Entry: Reward_Type_Difficulty
+Action Entry: Reward_Action_Difficulty
+Index: 8
+TargetValue: 1
+Category: MISSION
+--------------------
+Desc: Challenge_Complete_World_2_Hard
+Reward Name: Reward_World_2_Nightmare
+Type Entry: Reward_Type_Difficulty
+Action Entry: Reward_Action_Difficulty
+Index: 9
+TargetValue: 1
+Category: MISSION
+--------------------
+Desc: Challenge_Complete_World_3_Normal
+Reward Name: Reward_World_3_Hard
+Type Entry: Reward_Type_Difficulty
+Action Entry: Reward_Action_Difficulty
+Index: 10
+TargetValue: 1
+Category: MISSION
+--------------------
+Desc: Challenge_Complete_World_3_Hard
+Reward Name: Reward_World_3_Nightmare
+Type Entry: Reward_Type_Difficulty
+Action Entry: Reward_Action_Difficulty
+Index: 11
+TargetValue: 1
+Category: MISSION
+--------------------
+Desc: Challenge_Complete_World_1_Normal
+Reward Name: Reward_World_1_Hard
+Type Entry: Reward_Type_Difficulty
+Action Entry: Reward_Action_Difficulty
+Index: 6
+TargetValue: 1
+Category: MISSION
+--------------------
+Desc: Challenge_Complete_World_1_Hard
+Reward Name: Reward_World_1_Nightmare
+Type Entry: Reward_Type_Difficulty
+Action Entry: Reward_Action_Difficulty
+Index: 7
+TargetValue: 1
+Category: MISSION
+--------------------
+Desc: Challenge_Defeat_Sol'phish
+Reward Name: Modifier_EndlessMode_Name
+Type Entry: Reward_Type_Modifier
+Action Entry: Reward_Action_Modifier
+Index: 60
+TargetValue: 1
+Category: MICS
+--------------------
+Desc: Challenge_Take_FriendlyFireDamage
+Reward Name: Modifier_PeacefulMode_Name
+Type Entry: Reward_Type_Modifier
+Action Entry: Reward_Action_Modifier
+Index: 59
+TargetValue: 1
+Category: MICS
+--------------------
+Desc: Challenge_LevelUpSpell
+Reward Name: Modifier_SingleSpellMode_Name
+Type Entry: Reward_Type_Modifier
+Action Entry: Reward_Action_Modifier
+Index: 61
+TargetValue: 20
+Category: MICS
+--------------------
+Desc: Challenge_TwoStonesOneBird_BirdMage
+Reward Name: Skin_BirdMage_1
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 63
+TargetValue: 2
+Category: OUTFITS
+--------------------
+Desc: Challenge_PickUpRelics_BirdMage
+Reward Name: Skin_BirdMage_2
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 64
+TargetValue: 33
+Category: OUTFITS
+--------------------
+Desc: Challenge_Revive_Campanelli
+Reward Name: Skin_Campanelli_1
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 35
+TargetValue: 13
+Category: OUTFITS
+--------------------
+Desc: Challenge_PhantomBladesShoot_Campanelli
+Reward Name: Skin_Campanelli_2
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 36
+TargetValue: 10
+Category: OUTFITS
+--------------------
+Desc: Challenge_ConcurrentSummons_FluteMage
+Reward Name: Skin_FluteMage_1
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 75
+TargetValue: 8
+Category: OUTFITS
+--------------------
+Desc: Challenge_ActiveSummonDuration_FluteMage
+Reward Name: Skin_FluteMage_2
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 76
+TargetValue: 12
+Category: OUTFITS
+--------------------
+Desc: Challenge_AugmentRuneBurst_Hatty
+Reward Name: Skin_Hatty_1
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 37
+TargetValue: 4
+Category: OUTFITS
+--------------------
+Desc: Challenge_PlasmaDamage_Hatty
+Reward Name: Skin_Hatty_2
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 38
+TargetValue: 314159
+Category: OUTFITS
+--------------------
+Desc: Challenge_Bush_Hatty
+Reward Name: Skin_Hatty_3
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 56
+TargetValue: 300
+Category: OUTFITS
+--------------------
+Desc: Challenge_RockyRoadRocks_KeyMage
+Reward Name: Skin_KeyMage_1
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 31
+TargetValue: 19440
+Category: OUTFITS
+--------------------
+Desc: Challenge_RockyRoadSize_KeyMage
+Reward Name: Skin_KeyMage_2
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 32
+TargetValue: 100
+Category: OUTFITS
+--------------------
+Desc: Challenge_ArcaneBroadswordVenom_Ludwig
+Reward Name: Skin_Ludwig_1
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 33
+TargetValue: 1
+Category: OUTFITS
+--------------------
+Desc: Challenge_Sacrifice_Ludwig
+Reward Name: Skin_Ludwig_2
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 34
+TargetValue: 1066
+Category: OUTFITS
+--------------------
+Desc: Challenge_HealthPotions_MoonMage
+Reward Name: Skin_MoonMage_1
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 27
+TargetValue: 20
+Category: OUTFITS
+--------------------
+Desc: Challenge_PlayRun_MoonMage
+Reward Name: Skin_MoonMage_2
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 28
+TargetValue: 28
+Category: OUTFITS
+--------------------
+Desc: Challenge_PickupPotionAtFullHealth_PlantMage
+Reward Name: Skin_PlantMage_1
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 66
+TargetValue: 1
+Category: OUTFITS
+--------------------
+Desc: Challenge_Collect100XPWithMagnet_PlantMage
+Reward Name: Skin_PlantMage_2
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 67
+TargetValue: 666
+Category: OUTFITS
+--------------------
+Desc: Challenge_NoHealthPotions_PlantMage
+Reward Name: Skin_PlantMage_3
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 85
+TargetValue: 1
+Category: OUTFITS
+--------------------
+Desc: Challenge_DamageAstraOrbs_Reginald
+Reward Name: Skin_Reginald_1
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 25
+TargetValue: 200000
+Category: OUTFITS
+--------------------
+Desc: Challenge_AugmentAstralOrbs_Reginald
+Reward Name: Skin_Reginald_2
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 26
+TargetValue: 4
+Category: OUTFITS
+--------------------
+Desc: Challenge_LegendaryUpgrade_Reginald
+Reward Name: Skin_Reginald_3
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 88
+TargetValue: 1
+Category: OUTFITS
+--------------------
+Desc: Challenge_RetrieveBewitchedFungi_Smithy
+Reward Name: Skin_Smithy_1
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 53
+TargetValue: 432
+Category: OUTFITS
+--------------------
+Desc: Challenge_HealPartyWithBeam_Smithy
+Reward Name: Skin_Smithy_2
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 54
+TargetValue: 1
+Category: OUTFITS
+--------------------
+Desc: Challenge_HealWithFire_Smithy
+Reward Name: Skin_Smithy_3
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 86
+TargetValue: 1
+Category: OUTFITS
+--------------------
+Desc: Challenge_FallingStarsConcurrentStars_StarMage
+Reward Name: Skin_StarMage_1
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 47
+TargetValue: 4
+Category: OUTFITS
+--------------------
+Desc: Challenge_CastFallingStars_StarMage
+Reward Name: Skin_StarMage_2
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 48
+TargetValue: 9001
+Category: OUTFITS
+--------------------
+Desc: Challenge_StandStill_StarMage
+Reward Name: Skin_StarMage_3
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 58
+TargetValue: 1
+Category: OUTFITS
+--------------------
+Desc: Challenge_SolarPulseSize_SunMage
+Reward Name: Skin_SunMage_1
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 29
+TargetValue: 50
+Category: OUTFITS
+--------------------
+Desc: Challenge_SolarPulseWildfire_SunMage
+Reward Name: Skin_SunMage_2
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 30
+TargetValue: 1
+Category: OUTFITS
+--------------------
+Desc: Challenge_IcePatch_SunMage
+Reward Name: Skin_SunMage_3
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 55
+TargetValue: 90
+Category: OUTFITS
+--------------------
+Desc: Challenge_RevivePlayersWhenDowned_VampireMage
+Reward Name: Skin_VampireMage_1
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 78
+TargetValue: 12
+Category: OUTFITS
+--------------------
+Desc: Challenge_HealWithSingleAttack_VampireMage
+Reward Name: Skin_VampireMage_2
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 79
+TargetValue: 11
+Category: OUTFITS
+--------------------
+Desc: Challenge_StealHealth_VampireMage
+Reward Name: Skin_VampireMage_3
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 87
+TargetValue: 1
+Category: OUTFITS
+--------------------
+Desc: Challenge_RespawnKill_WizardKing
+Reward Name: Skin_WizardKing_1
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 39
+TargetValue: 404
+Category: OUTFITS
+--------------------
+Desc: Challenge_MagicMissleEnemies_WizardKing
+Reward Name: Skin_WizardKing_2
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 40
+TargetValue: 10
+Category: OUTFITS
+--------------------
+Desc: Challenge_Geyser_WizardKing
+Reward Name: Skin_WizardKing_3
+Type Entry: Reward_Type_Cosmetic
+Action Entry: Reward_Action_Cosmetic
+Index: 57
+TargetValue: 1500
+Category: OUTFITS
+--------------------
+Desc: Challenge_Description_PerformInfusions
+Reward Name: Element_Acid
+Type Entry: Reward_Type_Element
+Action Entry: Reward_Action_Element
+Index: 13
+TargetValue: 7
+Category: MICS
+--------------------
+Desc: Challenge_Description_PerformInfusions
+Reward Name: Element_Dark
+Type Entry: Reward_Type_Element
+Action Entry: Reward_Action_Element
+Index: 73
+TargetValue: 26
+Category: MICS
+--------------------
+Desc: Challenge_Description_PerformInfusions
+Reward Name: Element_Ice
+Type Entry: Reward_Type_Element
+Action Entry: Reward_Action_Element
+Index: 14
+TargetValue: 15
+Category: MICS
+--------------------
+Desc: Challenge_Description_PerformInfusions
+Reward Name: Element_Lightning
+Type Entry: Reward_Type_Element
+Action Entry: Reward_Action_Element
+Index: 12
+TargetValue: 2
+Category: MICS
+--------------------
+Desc: Challenge_Description_DieOnce
+Reward Name: Reward_UpgradeTier_1
+Type Entry: Reward_Type_Upgrade
+Action Entry: Reward_Action_Upgrade
+Index: 1
+TargetValue: 1
+Category: MICS
+--------------------
+Desc: Challenge_Description_PerformUpgrades
+Reward Name: Reward_UpgradeTier_2
+Type Entry: Reward_Type_Upgrade
+Action Entry: Reward_Action_Upgrade
+Index: 2
+TargetValue: 5
+Category: MICS
+--------------------
+Desc: Challenge_Description_PerformUpgrades
+Reward Name: Reward_UpgradeTier_3
+Type Entry: Reward_Type_Upgrade
+Action Entry: Reward_Action_Upgrade
+Index: 3
+TargetValue: 15
+Category: MICS
+--------------------
+Desc: Challenge_SurviveMinutes_World_1
+Reward Name: Location_Name_CrystalFrostlands
+Type Entry: Reward_Type_World
+Action Entry: Reward_Action_World
+Index: 4
+TargetValue: 12
+Category: MISSION
+--------------------
+Desc: Challenge_SurviveMinutes_World_2
+Reward Name: Location_Name_ScorchedAbyss
+Type Entry: Reward_Type_World
+Action Entry: Reward_Action_World
+Index: 5
+TargetValue: 12
+Category: MISSION
+--------------------
+Desc: Challenge_SurviveMinutes_World_3
+Reward Name: Location_Name_AstralPlanes
+Type Entry: Reward_Type_World
+Action Entry: Reward_Action_World
+Index: 81
+TargetValue: 12
+Category: MISSION
+--------------------
