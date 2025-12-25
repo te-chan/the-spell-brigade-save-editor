@@ -49,7 +49,7 @@ function AppContent() {
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/the-spell-brigade-save-editor">
       <AppContent />
     </BrowserRouter>
   );
