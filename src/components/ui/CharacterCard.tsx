@@ -1,5 +1,6 @@
 import type { CharacterCardProps, CharacterIconType } from '../../types';
 import { LevelSlider } from './LevelSlider';
+import { useTranslation } from '../../i18n';
 
 const iconMap: Record<CharacterIconType, string> = {
   fire: 'local_fire_department',
@@ -12,6 +13,7 @@ const iconMap: Record<CharacterIconType, string> = {
 };
 
 export function CharacterCard({ character, onLevelChange, onPrestigeChange, onUnlock }: CharacterCardProps) {
+  const { t } = useTranslation();
   const isMaxed = character.level >= character.maxLevel;
   const iconName = character.iconType ? iconMap[character.iconType] : 'person';
 
@@ -75,31 +77,31 @@ export function CharacterCard({ character, onLevelChange, onPrestigeChange, onUn
             {isLocked && (
               <span className="inline-flex items-center gap-1 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400 text-xs font-bold px-2 py-0.5">
                 <span className="material-symbols-outlined text-sm">lock</span>
-                Locked
+                {t('character.locked')}
               </span>
             )}
             {!isLocked && isMaxed && (
-              <span className="material-symbols-outlined text-amber-500 text-sm" title="Max Level">
+              <span className="material-symbols-outlined text-amber-500 text-sm" title={t('character.maxLevelTitle')}>
                 star
               </span>
             )}
             {!isLocked && supportsPrestige && prestige > 0 && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-violet-100 text-violet-700 dark:bg-violet-500/20 dark:text-violet-300 text-xs font-bold px-2 py-0.5" title="Prestige">
+              <span className="inline-flex items-center gap-1 rounded-full bg-violet-100 text-violet-700 dark:bg-violet-500/20 dark:text-violet-300 text-xs font-bold px-2 py-0.5" title={t('character.prestige')}>
                 <span className="material-symbols-outlined text-sm">auto_awesome</span>
                 P{prestige}
               </span>
             )}
           </div>
           <p className="text-xs font-medium text-slate-500 dark:text-text-muted">
-            Class: {character.characterClass} &bull; ID: #{character.id}
+            {t('character.classLabel')}: {character.characterClass} &bull; {t('character.idLabel')}: #{character.id}
             {isLocked && character.initialCost !== undefined && character.initialCost > 0 && (
-              <> &bull; Cost: {character.initialCost.toLocaleString()} G</>
+              <> &bull; {t('character.costLabel')}: {character.initialCost.toLocaleString()} G</>
             )}
           </p>
           {!isLocked && character.selectedSkinName && (
             <p className="text-xs font-medium text-slate-500 dark:text-text-muted flex items-center gap-1 mt-0.5">
               <span className="material-symbols-outlined text-sm">checkroom</span>
-              <span title={`Skin ID: ${character.selectedSkinId}`}>
+              <span title={t('character.skinIdTitle', { id: character.selectedSkinId ?? '' })}>
                 {character.selectedSkinName}
               </span>
             </p>
@@ -116,10 +118,10 @@ export function CharacterCard({ character, onLevelChange, onPrestigeChange, onUn
             className="w-full flex items-center justify-center gap-2 rounded-lg bg-primary/10 hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 border border-primary/30 hover:border-primary text-primary font-bold py-2.5 transition-all"
           >
             <span className="material-symbols-outlined text-base">lock_open</span>
-            Unlock {character.name}
+            {t('character.unlockButton', { name: character.name })}
           </button>
           <p className="mt-1.5 text-[10px] text-center text-slate-400 dark:text-slate-500">
-            Adds the rank entry only — Gold is NOT deducted
+            {t('character.unlockHint')}
           </p>
         </div>
       )}
@@ -143,7 +145,7 @@ export function CharacterCard({ character, onLevelChange, onPrestigeChange, onUn
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="material-symbols-outlined text-violet-500 text-base">auto_awesome</span>
-              <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">Prestige</span>
+              <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">{t('character.prestige')}</span>
             </div>
             <div className="flex items-center gap-2">
               <button
@@ -151,7 +153,7 @@ export function CharacterCard({ character, onLevelChange, onPrestigeChange, onUn
                 onClick={handlePrestigeDecrement}
                 disabled={prestige <= 0}
                 className="w-7 h-7 flex items-center justify-center rounded-md bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:text-primary disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                aria-label="Decrement prestige"
+                aria-label={t('character.decrementPrestige')}
               >
                 <span className="material-symbols-outlined text-base">remove</span>
               </button>
@@ -162,7 +164,7 @@ export function CharacterCard({ character, onLevelChange, onPrestigeChange, onUn
                 type="button"
                 onClick={handlePrestigeIncrement}
                 className="w-7 h-7 flex items-center justify-center rounded-md bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:text-primary transition-colors"
-                aria-label="Increment prestige"
+                aria-label={t('character.incrementPrestige')}
               >
                 <span className="material-symbols-outlined text-base">add</span>
               </button>
@@ -179,7 +181,7 @@ export function CharacterCard({ character, onLevelChange, onPrestigeChange, onUn
               </span>
               {prestige > 0 && character.selectedSkinId !== undefined && character.prestigeSkinName && (
                 <span className="ml-auto text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500">
-                  unlocked
+                  {t('character.unlocked')}
                 </span>
               )}
             </div>

@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import type { AchievementEditorProps, Achievement } from '../../types';
+import { useTranslation, type TKey } from '../../i18n';
 
-// カテゴリの表示名
-const CATEGORY_LABELS: Record<Achievement['category'], string> = {
-  RELICS: 'Relics',
-  WIZARDS: 'Wizards',
-  MISSION: 'Missions',
-  MICS: 'Miscellaneous',
-  OUTFITS: 'Outfits',
+const CATEGORY_LABEL_KEYS: Record<Achievement['category'], TKey> = {
+  RELICS: 'achievement.categoryRelics',
+  WIZARDS: 'achievement.categoryWizards',
+  MISSION: 'achievement.categoryMission',
+  MICS: 'achievement.categoryMics',
+  OUTFITS: 'achievement.categoryOutfits',
 };
 
 // カテゴリアイコン
@@ -20,6 +20,7 @@ const CATEGORY_ICONS: Record<Achievement['category'], string> = {
 };
 
 export function AchievementEditor({ achievements, onAchievementToggle }: AchievementEditorProps) {
+  const { t } = useTranslation();
   const [expandedCategories, setExpandedCategories] = useState<Set<Achievement['category']>>(
     new Set(['RELICS', 'WIZARDS', 'MISSION', 'MICS', 'OUTFITS'])
   );
@@ -74,7 +75,7 @@ export function AchievementEditor({ achievements, onAchievementToggle }: Achieve
       <div className="px-4 pb-2 pt-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <h3 className="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-tight">
-            Achievements
+            {t('edit.achievements')}
           </h3>
           <span className="text-xs font-medium text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded">
             {totalUnlocked} / {totalAchievements}
@@ -85,13 +86,13 @@ export function AchievementEditor({ achievements, onAchievementToggle }: Achieve
             onClick={unlockAll}
             className="text-xs font-medium text-emerald-400 hover:text-emerald-300 bg-emerald-400/10 hover:bg-emerald-400/20 px-3 py-1.5 rounded transition-colors"
           >
-            Unlock All
+            {t('edit.unlockAll')}
           </button>
           <button
             onClick={lockAll}
             className="text-xs font-medium text-red-400 hover:text-red-300 bg-red-400/10 hover:bg-red-400/20 px-3 py-1.5 rounded transition-colors"
           >
-            Lock All
+            {t('edit.lockAll')}
           </button>
         </div>
       </div>
@@ -119,7 +120,7 @@ export function AchievementEditor({ achievements, onAchievementToggle }: Achieve
                   <span className="material-symbols-outlined text-xl text-text-muted">
                     {CATEGORY_ICONS[category]}
                   </span>
-                  <span className="font-semibold text-white">{CATEGORY_LABELS[category]}</span>
+                  <span className="font-semibold text-white">{t(CATEGORY_LABEL_KEYS[category])}</span>
                   <span className="text-xs text-text-muted">
                     {unlockedCount}/{categoryAchievements.length}
                   </span>

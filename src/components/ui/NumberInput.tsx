@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import type { NumberInputProps } from '../../types';
+import { useTranslation } from '../../i18n';
 
 export function NumberInput({
   value,
@@ -9,6 +10,7 @@ export function NumberInput({
   label,
   showMaxButton = false,
 }: NumberInputProps) {
+  const { t } = useTranslation();
   const handleIncrement = useCallback(() => {
     onChange(Math.min(value + 1, max));
   }, [value, max, onChange]);
@@ -43,7 +45,7 @@ export function NumberInput({
               onClick={handleMax}
               className="text-xs text-primary font-medium cursor-pointer hover:underline"
             >
-              Max out
+              {t('number.maxOut')}
             </button>
           )}
         </div>
@@ -75,8 +77,8 @@ export function NumberInput({
         </button>
       </div>
       <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400 px-1">
-        <span>Min: {min.toLocaleString()}</span>
-        <span>Max: {max.toLocaleString()}</span>
+        <span>{t('number.min', { value: min.toLocaleString() })}</span>
+        <span>{t('number.max', { value: max.toLocaleString() })}</span>
       </div>
     </label>
   );

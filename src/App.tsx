@@ -1,6 +1,21 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from 'react-router-dom';
 import { DropPage, EditPage } from './pages';
 import { useSaveEditor } from './hooks';
+import {
+  I18nProvider,
+  LOCALES,
+  parseLocaleFromPath,
+  pathForLocale,
+  pickInitialLocale,
+} from './i18n';
+
+const BASENAME = '/the-spell-brigade-save-editor';
 
 function AppContent() {
   const {
@@ -9,7 +24,7 @@ function AppContent() {
     loadStatus,
     hasChanges,
     metaInfo,
-    metaError,
+    metaErrorKey,
     loadFile,
     loadMetaFile,
     clearMeta,
@@ -31,7 +46,7 @@ function AppContent() {
             fileInfo={fileInfo}
             loadStatus={loadStatus}
             metaInfo={metaInfo}
-            metaError={metaError}
+            metaErrorKey={metaErrorKey}
             onFileDrop={loadFile}
             onMetaFileDrop={loadMetaFile}
             onClearMeta={clearMeta}
@@ -59,6 +74,30 @@ function AppContent() {
   );
 }
 
+function LocalizedApp() {
+  const location = useLocation();
+  const { locale } = parseLocaleFromPath(location.pathname);
+
+  return (
+    <I18nProvider locale={locale}>
+      <AppContent />
+    </I18nProvider>
+  );
+}
+
+// `/`（ルート）に来たときだけ、保存済み or ブラウザ言語に応じて `/ja/` 等に振り分ける。
+// `/edit` などサブパスは prefix なし == English として扱う（明示的に en を選んだ可能性があるため）。
+function RootRedirector() {
+  const location = useLocation();
+  const isExactRoot = location.pathname === '/' || location.pathname === '';
+  const initial = pickInitialLocale();
+  if (isExactRoot && initial !== 'en') {
+    const target = pathForLocale(initial, '/') + location.search + location.hash;
+    return <Navigate to={target} replace />;
+  }
+  return <LocalizedApp />;
+}
+
 function GitHubLink() {
   return (
     <a
@@ -82,8 +121,15 @@ function GitHubLink() {
 
 function App() {
   return (
-    <BrowserRouter basename="/the-spell-brigade-save-editor">
-      <AppContent />
+    <BrowserRouter basename={BASENAME}>
+      <Routes>
+        {/* 言語別 prefix ルート */}
+        {LOCALES.filter((l) => l !== 'en').map((loc) => (
+          <Route key={loc} path={`/${loc}/*`} element={<LocalizedApp />} />
+        ))}
+        {/* デフォルト (en) — 初回のみブラウザ言語に応じてリダイレクト判定 */}
+        <Route path="/*" element={<RootRedirector />} />
+      </Routes>
       <GitHubLink />
     </BrowserRouter>
   );

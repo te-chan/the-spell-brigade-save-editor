@@ -1,5 +1,6 @@
 import type { CharacterListProps } from '../../types';
 import { CharacterCard } from './CharacterCard';
+import { useTranslation } from '../../i18n';
 
 export function CharacterList({
   characters,
@@ -7,6 +8,7 @@ export function CharacterList({
   onCharacterPrestigeChange,
   onCharacterUnlock,
 }: CharacterListProps) {
+  const { t } = useTranslation();
   const unlockedCount = characters.filter((c) => !c.locked).length;
   const lockedCount = characters.length - unlockedCount;
 
@@ -16,12 +18,12 @@ export function CharacterList({
       <div className="sticky top-[60px] z-40 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm px-4 py-3 border-b border-slate-200 dark:border-slate-800/50 mb-2">
         <div className="flex justify-between items-end">
           <h3 className="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-tight">
-            Brigade Members
+            {t('edit.brigadeMembers')}
           </h3>
           <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">
-            {unlockedCount} Unlocked
+            {t('edit.unlockedCount', { count: unlockedCount })}
             {lockedCount > 0 && (
-              <span className="ml-1.5 opacity-70">&middot; {lockedCount} Locked</span>
+              <span className="ml-1.5 opacity-70">&middot; {t('edit.lockedCount', { count: lockedCount })}</span>
             )}
           </p>
         </div>

@@ -1,5 +1,6 @@
 import { useState, useCallback, useMemo } from 'react';
 import type { SaveData, FileInfo, FileLoadStatus, Character, Achievement, SaveMetaInfo } from '../types';
+import type { TKey } from '../i18n';
 import { decryptES3, encryptES3 } from '../services/es3Crypto';
 import { extractSaveData, extractActiveSlot } from '../services/es3Parser';
 import {
@@ -108,7 +109,7 @@ export interface UseSaveEditorReturn {
 
   // save_meta（任意ステップ）— 解析できれば active_slot を提示する
   metaInfo: SaveMetaInfo | null;
-  metaError: string | null;
+  metaErrorKey: TKey | null;
 
   // Actions
   loadFile: (file: File) => Promise<void>;
@@ -132,7 +133,7 @@ export function useSaveEditor(): UseSaveEditorReturn {
 
   // save_meta（オプション）— active_slot を表示してスロット選択を補助
   const [metaInfo, setMetaInfo] = useState<SaveMetaInfo | null>(null);
-  const [metaError, setMetaError] = useState<string | null>(null);
+  const [metaErrorKey, setMetaErrorKey] = useState<TKey | null>(null);
 
   // rawTextからUI表示用のSaveDataを生成
   const saveData = useMemo<SaveData | null>(() => {
@@ -223,7 +224,7 @@ export function useSaveEditor(): UseSaveEditorReturn {
    * 失敗しても editor 側のロードフローは独立して継続できるようエラーは内部状態に格納するだけ。
    */
   const loadMetaFile = useCallback(async (file: File) => {
-    setMetaError(null);
+    setMetaErrorKey(null);
     try {
       const arrayBuffer = await file.arrayBuffer();
       const decryptedData = await decryptES3(arrayBuffer);
@@ -231,7 +232,7 @@ export function useSaveEditor(): UseSaveEditorReturn {
 
       const activeSlot = extractActiveSlot(jsonString);
       if (activeSlot === undefined) {
-        setMetaError('Could not find active_slot in this file. Is it really save_meta?');
+        setMetaErrorKey('errors.metaNoActiveSlot');
         return;
       }
 
@@ -242,13 +243,13 @@ export function useSaveEditor(): UseSaveEditorReturn {
       });
     } catch (error) {
       console.error('Failed to decrypt save_meta:', error);
-      setMetaError('Failed to decrypt this file as save_meta.');
+      setMetaErrorKey('errors.metaDecryptFailed');
     }
   }, []);
 
   const clearMeta = useCallback(() => {
     setMetaInfo(null);
-    setMetaError(null);
+    setMetaErrorKey(null);
   }, []);
 
   // ゴールド更新
@@ -421,7 +422,7 @@ export function useSaveEditor(): UseSaveEditorReturn {
     loadStatus,
     hasChanges,
     metaInfo,
-    metaError,
+    metaErrorKey,
     loadFile,
     loadMetaFile,
     clearMeta,

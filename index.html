@@ -12,6 +12,14 @@
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://te-chan.github.io/the-spell-brigade-save-editor/" />
 
+    <!-- hreflang alternates (also re-emitted client-side per route) -->
+    <link rel="alternate" hreflang="en" href="https://te-chan.github.io/the-spell-brigade-save-editor/" />
+    <link rel="alternate" hreflang="ja" href="https://te-chan.github.io/the-spell-brigade-save-editor/ja/" />
+    <link rel="alternate" hreflang="ko" href="https://te-chan.github.io/the-spell-brigade-save-editor/ko/" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://te-chan.github.io/the-spell-brigade-save-editor/zh-CN/" />
+    <link rel="alternate" hreflang="zh-Hant" href="https://te-chan.github.io/the-spell-brigade-save-editor/zh-TW/" />
+    <link rel="alternate" hreflang="x-default" href="https://te-chan.github.io/the-spell-brigade-save-editor/" />
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://te-chan.github.io/the-spell-brigade-save-editor/" />
@@ -41,6 +49,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
   </head>
   <body>
+    <!--
+      SPA redirect restorer (paired with public/404.html).
+      404 経由で `/?/ja/edit` のように飛んできた場合、元のパスへ history.replaceState で戻す。
+    -->
+    <script>
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search.slice(1).split('&').map(function (s) {
+            return s.replace(/~and~/g, '&');
+          }).join('?');
+          window.history.replaceState(null, '', l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

@@ -11,3 +11,4 @@ export { CharacterCard } from './CharacterCard';
 export { CharacterList } from './CharacterList';
 export { AchievementEditor } from './AchievementEditor';
 export { ConfirmDialog } from './ConfirmDialog';
+export { LanguageSwitcher } from './LanguageSwitcher';

@@ -1,27 +1,29 @@
 import { useCallback, useState } from 'react';
 import type { FileDropZoneProps } from '../../types';
+import { useTranslation } from '../../i18n';
 
 export function FileDropZone({ onFileDrop, isLoading = false, mode = 'legacy', hintActiveSlot }: FileDropZoneProps) {
+  const { t } = useTranslation();
   const [isDragging, setIsDragging] = useState(false);
 
   // モード別の文言定義
   const headline = isLoading
-    ? 'Loading...'
+    ? t('dropzone.loading')
     : mode === 'meta'
-      ? 'Drop your save_meta file'
+      ? t('dropzone.metaHeadline')
       : mode === 'slot'
         ? hintActiveSlot !== undefined
-          ? `Drop save_slot_${hintActiveSlot} (your active slot)`
-          : 'Drop a save_slot_N file'
-        : 'Drop your save_slot_N file here';
+          ? t('dropzone.slotHeadlineActive', { slot: hintActiveSlot })
+          : t('dropzone.slotHeadline')
+        : t('dropzone.legacyHeadline');
 
   const subline = mode === 'meta'
-    ? 'Tells the editor which slot is currently active'
+    ? t('dropzone.metaSubline')
     : mode === 'slot'
       ? hintActiveSlot !== undefined
-        ? `Active slot detected: ${hintActiveSlot} — any save_slot_N also works`
-        : 'Pick the slot you want to edit'
-      : 'or tap to browse your device — legacy .es3 saves also supported';
+        ? t('dropzone.slotSublineActive', { slot: hintActiveSlot })
+        : t('dropzone.slotSubline')
+      : t('dropzone.legacySubline');
 
   const iconName = mode === 'meta' ? 'fact_check' : 'cloud_upload';
 
@@ -84,7 +86,7 @@ export function FileDropZone({ onFileDrop, isLoading = false, mode = 'legacy', h
       </div>
 
       <label className="flex min-w-[120px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-6 bg-surface-dark border border-surface-border text-white text-sm font-bold leading-normal tracking-wide hover:bg-primary hover:border-primary transition-colors shadow-md">
-        <span className="truncate">Select File</span>
+        <span className="truncate">{t('dropzone.selectFile')}</span>
         {/* No accept filter — v1.0.x saves have no extension (save_slot_N), legacy saves use .es3 */}
         <input
           type="file"

@@ -1,5 +1,6 @@
 import { useEffect, useCallback } from 'react';
 import { Button } from './Button';
+import { useTranslation } from '../../i18n';
 
 interface ConfirmDialogProps {
   isOpen: boolean;
@@ -13,13 +14,17 @@ interface ConfirmDialogProps {
 
 export function ConfirmDialog({
   isOpen,
-  title = 'Confirm',
+  title,
   message,
-  confirmLabel = 'Confirm',
-  cancelLabel = 'Cancel',
+  confirmLabel,
+  cancelLabel,
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) {
+  const { t } = useTranslation();
+  const resolvedTitle = title ?? t('dialog.confirmTitle');
+  const resolvedConfirm = confirmLabel ?? t('dialog.confirm');
+  const resolvedCancel = cancelLabel ?? t('dialog.cancel');
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -66,7 +71,7 @@ export function ConfirmDialog({
 
         {/* Title */}
         <h2 className="text-xl font-bold text-center text-slate-900 dark:text-white mb-3">
-          {title}
+          {resolvedTitle}
         </h2>
 
         {/* Message */}
@@ -77,10 +82,10 @@ export function ConfirmDialog({
         {/* Buttons */}
         <div className="grid grid-cols-2 gap-3">
           <Button variant="secondary" size="md" onClick={onCancel}>
-            {cancelLabel}
+            {resolvedCancel}
           </Button>
           <Button variant="primary" size="md" onClick={onConfirm}>
-            {confirmLabel}
+            {resolvedConfirm}
           </Button>
         </div>
       </div>

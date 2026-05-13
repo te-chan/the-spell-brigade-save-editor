@@ -1,4 +1,5 @@
 import type { FileInfoCardProps, FileLoadStatus } from '../../types';
+import { useTranslation } from '../../i18n';
 
 function formatFileSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
@@ -6,39 +7,51 @@ function formatFileSize(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-function formatDate(date: Date): string {
+const LOCALE_TO_BCP47: Record<string, string> = {
+  en: 'en-US',
+  ja: 'ja-JP',
+  ko: 'ko-KR',
+  'zh-CN': 'zh-CN',
+  'zh-TW': 'zh-TW',
+};
+
+function formatDate(date: Date, locale: string, todayLabel: (time: string) => string): string {
+  const bcp47 = LOCALE_TO_BCP47[locale] ?? 'en-US';
   const now = new Date();
   const isToday = date.toDateString() === now.toDateString();
-  const timeStr = date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  const timeStr = date.toLocaleTimeString(bcp47, { hour: 'numeric', minute: '2-digit' });
 
   if (isToday) {
-    return `Today ${timeStr}`;
+    return todayLabel(timeStr);
   }
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' ' + timeStr;
+  return date.toLocaleDateString(bcp47, { month: 'short', day: 'numeric' }) + ' ' + timeStr;
 }
 
-function getStatusInfo(status: FileLoadStatus): { label: string; color: string } {
+function useStatusInfo(status: FileLoadStatus): { label: string; color: string } {
+  const { t } = useTranslation();
   switch (status) {
     case 'ready':
-      return { label: 'Ready', color: 'text-primary' };
+      return { label: t('fileInfo.statusReady'), color: 'text-primary' };
     case 'loading':
-      return { label: 'Loading...', color: 'text-amber-500' };
+      return { label: t('fileInfo.statusLoading'), color: 'text-amber-500' };
     case 'error':
-      return { label: 'Error', color: 'text-red-500' };
+      return { label: t('fileInfo.statusError'), color: 'text-red-500' };
     default:
-      return { label: 'No file', color: 'text-slate-500' };
+      return { label: t('fileInfo.statusIdle'), color: 'text-slate-500' };
   }
 }
 
 export function FileInfoCard({ fileInfo, status }: FileInfoCardProps) {
-  const statusInfo = getStatusInfo(status);
+  const { t, locale } = useTranslation();
+  const statusInfo = useStatusInfo(status);
+  const todayLabel = (time: string) => t('fileInfo.today', { time });
 
   if (!fileInfo && status === 'idle') {
     return (
       <section className="mt-6 mb-4">
         <div className="flex items-center justify-between mb-3 px-1">
           <h3 className="text-slate-900 dark:text-white text-sm font-bold uppercase tracking-wider opacity-70">
-            Current File
+            {t('fileInfo.currentFile')}
           </h3>
           <span className={`text-xs font-medium ${statusInfo.color}`}>
             {statusInfo.label}
@@ -51,7 +64,7 @@ export function FileInfoCard({ fileInfo, status }: FileInfoCardProps) {
             </div>
             <div className="flex flex-col justify-center">
               <p className="text-slate-500 dark:text-slate-400 text-base font-medium leading-normal">
-                No file selected
+                {t('fileInfo.noFileSelected')}
               </p>
             </div>
           </div>
@@ -64,7 +77,7 @@ export function FileInfoCard({ fileInfo, status }: FileInfoCardProps) {
     <section className="mt-6 mb-4">
       <div className="flex items-center justify-between mb-3 px-1">
         <h3 className="text-slate-900 dark:text-white text-sm font-bold uppercase tracking-wider opacity-70">
-          Current File
+          {t('fileInfo.currentFile')}
         </h3>
         <span className={`text-xs font-medium ${statusInfo.color}`}>
           {statusInfo.label}
@@ -77,7 +90,7 @@ export function FileInfoCard({ fileInfo, status }: FileInfoCardProps) {
           </div>
           <div className="flex flex-col justify-center">
             <p className="text-slate-900 dark:text-white text-base font-medium leading-normal line-clamp-1 font-display">
-              {fileInfo?.name ?? 'Unknown file'}
+              {fileInfo?.name ?? t('fileInfo.unknownFile')}
             </p>
             <div className="flex items-center gap-2">
               <p className="text-slate-500 dark:text-text-muted text-xs font-normal leading-normal">
@@ -85,7 +98,7 @@ export function FileInfoCard({ fileInfo, status }: FileInfoCardProps) {
               </p>
               <span className="size-1 rounded-full bg-slate-400 dark:bg-slate-600" />
               <p className="text-slate-500 dark:text-text-muted text-xs font-normal leading-normal">
-                Modified: {fileInfo ? formatDate(fileInfo.lastModified) : '—'}
+                {t('fileInfo.modifiedLabel')}: {fileInfo ? formatDate(fileInfo.lastModified, locale, todayLabel) : '—'}
               </p>
             </div>
           </div>

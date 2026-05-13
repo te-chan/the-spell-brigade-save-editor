@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>The Spell Brigade - Save Editor</title>
+    <!--
+      GitHub Pages SPA redirect. /ja/, /ko/, /zh-CN/, /zh-TW/ などの
+      ディープリンクへ直接アクセスされた場合、index.html に転送して
+      履歴で元のパスを復元する (rafgraph/spa-github-pages 方式)。
+    -->
+    <script>
+      (function () {
+        var segmentCount = 1; // GitHub Pages project page: /the-spell-brigade-save-editor/
+        var l = window.location;
+        l.replace(
+          l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+          l.pathname.split('/').slice(0, 1 + segmentCount).join('/') + '/?/' +
+          l.pathname.slice(1).split('/').slice(segmentCount).join('/').replace(/&/g, '~and~') +
+          (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+          l.hash
+        );
+      })();
+    </script>
+  </head>
+  <body></body>
+</html>

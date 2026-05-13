@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Header, Button, Card, GoldEditor, CharacterList, AchievementEditor, ConfirmDialog } from '../components/ui';
 import type { SaveData } from '../types';
+import { useTranslation, pathForLocale } from '../i18n';
 
 // Presentational Component Props
 interface EditPageViewProps {
@@ -36,10 +37,11 @@ export function EditPageView({
   onCharacterUnlock,
   onAchievementToggle,
 }: EditPageViewProps) {
+  const { t } = useTranslation();
   return (
     <div className="relative flex flex-col min-h-screen max-w-7xl mx-auto">
       <Header
-        title="Save Editor"
+        title={t('app.title')}
         onBack={onBack}
         rightAction={
           <Button
@@ -48,7 +50,7 @@ export function EditPageView({
             onClick={onSaveClick}
             disabled={!hasChanges}
           >
-            Save
+            {t('edit.save')}
           </Button>
         }
       />
@@ -61,10 +63,10 @@ export function EditPageView({
             {/* Resources Section Header */}
             <div className="pb-2 pt-6 flex items-center justify-between">
               <h3 className="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-tight">
-                Global Resources
+                {t('edit.globalResources')}
               </h3>
               <span className="text-xs font-medium text-slate-500 dark:text-slate-400 bg-slate-200 dark:bg-slate-800 px-2 py-1 rounded">
-                Read-only metadata
+                {t('edit.readOnlyMeta')}
               </span>
             </div>
 
@@ -107,17 +109,17 @@ export function EditPageView({
             className="flex items-center gap-2 rounded-full bg-slate-900/90 dark:bg-white/10 backdrop-blur-md px-5 py-2.5 shadow-xl ring-1 ring-white/10 pointer-events-auto transform transition-transform active:scale-95 cursor-pointer hover:bg-slate-800 dark:hover:bg-white/20"
           >
             <span className="material-symbols-outlined text-white text-xl">restart_alt</span>
-            <span className="text-sm font-bold text-white">Reset Changes</span>
+            <span className="text-sm font-bold text-white">{t('edit.resetChanges')}</span>
           </button>
         </div>
       )}
 
       <ConfirmDialog
         isOpen={showConfirmDialog}
-        title="Warning"
-        message="This data may cause unexpected game behavior or significantly disrupt your game experience. Also, this data does not represent your actual skill. Do you acknowledge this?"
-        confirmLabel="I Understand"
-        cancelLabel="Cancel"
+        title={t('dialog.warningTitle')}
+        message={t('dialog.warningMessage')}
+        confirmLabel={t('dialog.understand')}
+        cancelLabel={t('dialog.cancel')}
         onConfirm={onSaveConfirm}
         onCancel={onSaveCancel}
       />
@@ -151,10 +153,11 @@ export function EditPage({
   onAchievementToggle,
 }: EditPageProps) {
   const navigate = useNavigate();
+  const { t, locale } = useTranslation();
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   const handleBack = () => {
-    navigate('/');
+    navigate(pathForLocale(locale, '/'));
   };
 
   const handleSaveClick = () => {
@@ -175,9 +178,9 @@ export function EditPage({
       <div className="flex flex-col min-h-screen max-w-7xl mx-auto items-center justify-center">
         <Card className="p-6 text-center">
           <span className="material-symbols-outlined text-4xl text-slate-400 mb-4">error</span>
-          <p className="text-slate-600 dark:text-slate-400">No save data loaded</p>
+          <p className="text-slate-600 dark:text-slate-400">{t('edit.noSaveLoaded')}</p>
           <Button variant="primary" onClick={handleBack} className="mt-4">
-            Go Back
+            {t('edit.goBack')}
           </Button>
         </Card>
       </div>

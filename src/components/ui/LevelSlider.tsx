@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import type { LevelSliderProps } from '../../types';
+import { useTranslation } from '../../i18n';
 
 export function LevelSlider({
   value,
@@ -8,6 +9,7 @@ export function LevelSlider({
   max = 10,
   isMaxed = false,
 }: LevelSliderProps) {
+  const { t } = useTranslation();
   const handleSliderChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(parseInt(e.target.value, 10));
   }, [onChange]);
@@ -31,11 +33,11 @@ export function LevelSlider({
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <label className={`text-xs font-bold uppercase tracking-wider ${isMaxed ? 'text-amber-500' : 'text-slate-500 dark:text-slate-400'}`}>
-          {isMaxed ? 'Max Level Reached' : 'Level'}
+          {isMaxed ? t('level.maxReached') : t('level.label')}
         </label>
         {!isMaxed && (
           <span className="text-xs font-medium text-primary bg-primary/10 px-2 py-0.5 rounded">
-            Max {max}
+            {t('level.max', { value: max })}
           </span>
         )}
       </div>

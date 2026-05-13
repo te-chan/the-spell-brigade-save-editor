@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Header, Button, FileDropZone, FileInfoCard, ConfirmDialog } from '../components/ui';
 import type { FileInfo, FileLoadStatus, SaveMetaInfo } from '../types';
+import { useTranslation, pathForLocale, type TKey } from '../i18n';
 
 // Presentational Component Props
 interface DropPageViewProps {
@@ -10,7 +11,7 @@ interface DropPageViewProps {
   showConfirmDialog: boolean;
   // save_meta フロー (任意)
   metaInfo: SaveMetaInfo | null;
-  metaError: string | null;
+  metaErrorKey: TKey | null;
   metaSkipped: boolean;
   slotMismatchWarning: string | null;
   onMetaFileDrop: (file: File) => void;
@@ -30,7 +31,7 @@ export function DropPageView({
   loadStatus,
   showConfirmDialog,
   metaInfo,
-  metaError,
+  metaErrorKey,
   metaSkipped,
   slotMismatchWarning,
   onMetaFileDrop,
@@ -43,6 +44,7 @@ export function DropPageView({
   onExportCancel,
   onHelpClick,
 }: DropPageViewProps) {
+  const { t } = useTranslation();
   const isLoading = loadStatus === 'loading';
   const isReady = loadStatus === 'ready';
   const [copied, setCopied] = useState(false);
@@ -62,7 +64,7 @@ export function DropPageView({
   return (
     <div className="flex flex-col min-h-screen max-w-2xl mx-auto px-4">
       <Header
-        title="Save Editor"
+        title={t('app.title')}
         rightAction={
           <button
             onClick={onHelpClick}
@@ -76,9 +78,9 @@ export function DropPageView({
       <main className="flex-1 flex flex-col p-4 w-full h-full">
         {/* Step indicator */}
         <div className="flex items-center justify-center gap-2 text-xs font-medium text-slate-500 dark:text-slate-400 mb-3">
-          <span className={inSlotStep ? '' : 'text-primary font-bold'}>1. save_meta</span>
+          <span className={inSlotStep ? '' : 'text-primary font-bold'}>{t('drop.step1')}</span>
           <span className="material-symbols-outlined text-base">chevron_right</span>
-          <span className={inSlotStep ? 'text-primary font-bold' : ''}>2. save_slot_N</span>
+          <span className={inSlotStep ? 'text-primary font-bold' : ''}>{t('drop.step2')}</span>
         </div>
 
         {/* Drag and Drop Zone */}
@@ -86,16 +88,16 @@ export function DropPageView({
           {!inSlotStep ? (
             <>
               <FileDropZone onFileDrop={onMetaFileDrop} isLoading={false} mode="meta" />
-              {metaError && (
+              {metaErrorKey && (
                 <p className="mt-3 text-center text-sm text-red-500 dark:text-red-400">
-                  {metaError}
+                  {t(metaErrorKey)}
                 </p>
               )}
               <button
                 onClick={onSkipMeta}
                 className="mt-3 text-xs text-slate-500 dark:text-slate-400 hover:text-primary transition-colors underline-offset-2 hover:underline self-center"
               >
-                Skip — I'll pick the slot file directly
+                {t('drop.skipMeta')}
               </button>
             </>
           ) : (
@@ -108,7 +110,7 @@ export function DropPageView({
                       check_circle
                     </span>
                     <span className="text-sm text-emerald-700 dark:text-emerald-300">
-                      Active slot: <span className="font-bold">{metaInfo.activeSlot}</span>{' '}
+                      {t('drop.activeSlot')}: <span className="font-bold">{metaInfo.activeSlot}</span>{' '}
                       <span className="opacity-60">({metaInfo.fileName})</span>
                     </span>
                   </div>
@@ -116,20 +118,20 @@ export function DropPageView({
                     onClick={onResetMeta}
                     className="text-xs text-emerald-700 dark:text-emerald-300 hover:underline"
                   >
-                    Change
+                    {t('drop.change')}
                   </button>
                 </div>
               )}
               {metaSkipped && !metaInfo && (
                 <div className="mb-4 flex items-center justify-between gap-3 rounded-lg bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 px-4 py-2">
                   <span className="text-sm text-slate-600 dark:text-slate-400">
-                    Skipped save_meta — pick any save_slot_N file below.
+                    {t('drop.skippedMeta')}
                   </span>
                   <button
                     onClick={onResetMeta}
                     className="text-xs text-slate-600 dark:text-slate-400 hover:underline"
                   >
-                    Use save_meta
+                    {t('drop.useMeta')}
                   </button>
                 </div>
               )}
@@ -151,7 +153,7 @@ export function DropPageView({
 
           {/* Save File Location Guide */}
           <div className="text-center text-sm text-slate-500 dark:text-slate-400 mt-4">
-            <p className="mb-2">Save file location:</p>
+            <p className="mb-2">{t('drop.saveLocationLabel')}</p>
             <div className="flex items-center justify-center gap-2">
               <code className="bg-slate-200 dark:bg-slate-700 px-3 py-1.5 rounded text-xs font-mono">
                 {savePath}
@@ -159,7 +161,7 @@ export function DropPageView({
               <button
                 onClick={handleCopyPath}
                 className="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
-                title="Copy path"
+                title={t('drop.copyPath')}
               >
                 <span className="material-symbols-outlined text-lg">
                   {copied ? 'check' : 'content_copy'}
@@ -167,7 +169,7 @@ export function DropPageView({
               </button>
             </div>
             <p className="mt-2 text-xs opacity-75">
-              Press Win+R → paste the path → Enter to open the folder
+              {t('drop.saveLocationHint')}
             </p>
           </div>
         </section>
@@ -185,7 +187,7 @@ export function DropPageView({
             disabled={!isReady}
             className="uppercase tracking-wide shadow-lg shadow-primary/25"
           >
-            Load Data
+            {t('drop.loadData')}
           </Button>
           <Button
             variant="secondary"
@@ -195,7 +197,7 @@ export function DropPageView({
             disabled={!isReady}
             className="uppercase tracking-wide"
           >
-            Export Save
+            {t('drop.exportSave')}
           </Button>
         </section>
         <div className="h-6" />
@@ -203,10 +205,10 @@ export function DropPageView({
 
       <ConfirmDialog
         isOpen={showConfirmDialog}
-        title="Warning"
-        message="This data may cause unexpected game behavior or significantly disrupt your game experience. Also, this data does not represent your actual skill. Do you acknowledge this?"
-        confirmLabel="I Understand"
-        cancelLabel="Cancel"
+        title={t('dialog.warningTitle')}
+        message={t('dialog.warningMessage')}
+        confirmLabel={t('dialog.understand')}
+        cancelLabel={t('dialog.cancel')}
         onConfirm={onExportConfirm}
         onCancel={onExportCancel}
       />
@@ -219,7 +221,7 @@ interface DropPageProps {
   fileInfo: FileInfo | null;
   loadStatus: FileLoadStatus;
   metaInfo: SaveMetaInfo | null;
-  metaError: string | null;
+  metaErrorKey: TKey | null;
   onFileDrop: (file: File) => void;
   onMetaFileDrop: (file: File) => void;
   onClearMeta: () => void;
@@ -231,20 +233,21 @@ export function DropPage({
   fileInfo,
   loadStatus,
   metaInfo,
-  metaError,
+  metaErrorKey,
   onFileDrop,
   onMetaFileDrop,
   onClearMeta,
   onExportSave,
 }: DropPageProps) {
   const navigate = useNavigate();
+  const { t, locale } = useTranslation();
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [metaSkipped, setMetaSkipped] = useState(false);
   const [slotMismatchWarning, setSlotMismatchWarning] = useState<string | null>(null);
 
   const handleLoadData = () => {
     if (loadStatus === 'ready') {
-      navigate('/edit');
+      navigate(pathForLocale(locale, '/edit'));
     }
   };
 
@@ -255,15 +258,13 @@ export function DropPage({
       const slotNum = parseInt(slotMatch[1], 10);
       if (slotNum !== metaInfo.activeSlot) {
         setSlotMismatchWarning(
-          `You picked save_slot_${slotNum} but the active slot is ${metaInfo.activeSlot}. Editing it is still fine — just won't be the one the game loads by default.`
+          t('drop.slotMismatch', { picked: slotNum, active: metaInfo.activeSlot })
         );
       } else {
         setSlotMismatchWarning(null);
       }
     } else if (!slotMatch && !/\.es3$/i.test(file.name)) {
-      setSlotMismatchWarning(
-        `"${file.name}" doesn't look like a save_slot_N file. Continuing anyway.`
-      );
+      setSlotMismatchWarning(t('drop.slotUnknownName', { name: file.name }));
     } else {
       setSlotMismatchWarning(null);
     }
@@ -305,7 +306,7 @@ export function DropPage({
       loadStatus={loadStatus}
       showConfirmDialog={showConfirmDialog}
       metaInfo={metaInfo}
-      metaError={metaError}
+      metaErrorKey={metaErrorKey}
       metaSkipped={metaSkipped}
       slotMismatchWarning={slotMismatchWarning}
       onMetaFileDrop={onMetaFileDrop}
