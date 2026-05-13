@@ -13,6 +13,8 @@ export interface ChallengeProgress {
 export interface CharacterRank {
   currentRank: number;
   progressTowardsNextRank: number;
+  // 新フォーマット(v1.0.x)で追加されたPrestige値（旧セーブでは undefined）
+  prestige?: number;
 }
 
 export interface ES3SaveData {
@@ -24,8 +26,11 @@ export interface ES3SaveData {
   // キャラクター関連
   characterRanks: Map<number, CharacterRank>;
   selectedCharacter: number;
+  // SelectedSkinPerCharacter — 各キャラの装備中スキンID
+  selectedSkins: Map<number, number>;
 
   // 実績/チャレンジ
+  // 旧 ProgressForChallenges と 新 New_ProgressForChallenges を統合（新セクション優先）
   challenges: Map<number, ChallengeProgress>;
 
   // その他
@@ -42,6 +47,7 @@ export function extractSaveData(rawText: string): ES3SaveData {
     gold: extractGold(rawText),
     characterRanks: extractCharacterRanks(rawText),
     selectedCharacter: extractSelectedCharacter(rawText),
+    selectedSkins: extractSelectedSkins(rawText),
     challenges: extractChallenges(rawText),
     numberOfAttemptedRuns: extractAttemptedRuns(rawText),
   };
@@ -89,7 +95,8 @@ function extractAttemptedRuns(rawText: string): number {
 
 /**
  * キャラクターランク情報を抽出
- * パターン: "RankProgressPerCharacter" : {0:{...},1:{...}}
+ * 旧: ID:{ "CurrentRank" : X, "ProgressTowardsNextRank" : Y }
+ * 新: ID:{ "CurrentRank" : X, "ProgressTowardsNextRank" : 0.99, "Prestige" : N }
  */
 function extractCharacterRanks(rawText: string): Map<number, CharacterRank> {
   const ranks = new Map<number, CharacterRank>();
@@ -102,40 +109,89 @@ function extractCharacterRanks(rawText: string): Map<number, CharacterRank> {
 
   const sectionContent = sectionMatch[1];
 
-  // 各キャラクターエントリを抽出
-  // パターン: ID:{ "CurrentRank" : X, "ProgressTowardsNextRank" : Y }
-  const entryPattern = /(\d+):\{\s*"CurrentRank"\s*:\s*(\d+)\s*,\s*"ProgressTowardsNextRank"\s*:\s*(\d+)/g;
+  // ProgressTowardsNextRank は新フォーマットで浮動小数点になった (例: 0.99)
+  // Prestige は新フォーマットで追加された任意フィールド
+  const entryPattern = /(\d+):\{\s*"CurrentRank"\s*:\s*(\d+)\s*,\s*"ProgressTowardsNextRank"\s*:\s*(-?\d+(?:\.\d+)?)(?:\s*,\s*"Prestige"\s*:\s*(\d+))?/g;
 
   let match;
   while ((match = entryPattern.exec(sectionContent)) !== null) {
     const characterId = parseInt(match[1], 10);
     const currentRank = parseInt(match[2], 10);
-    const progressTowardsNextRank = parseInt(match[3], 10);
+    const progressTowardsNextRank = parseFloat(match[3]);
+    const prestige = match[4] !== undefined ? parseInt(match[4], 10) : undefined;
 
-    ranks.set(characterId, { currentRank, progressTowardsNextRank });
+    ranks.set(characterId, { currentRank, progressTowardsNextRank, prestige });
   }
 
   return ranks;
 }
 
 /**
+ * SelectedSkinPerCharacter を抽出
+ * フォーマット: "SelectedSkinPerCharacter" : {0:0,2:9,1:3,4:15}
+ * （未エントリのキャラは CHARACTER_META.defaultSkin にフォールバック）
+ */
+function extractSelectedSkins(rawText: string): Map<number, number> {
+  const skins = new Map<number, number>();
+  // 単一行のシンプルな {id:value,...} 辞書
+  const sectionMatch = rawText.match(/"SelectedSkinPerCharacter"\s*:\s*\{([^}]*)\}/);
+  if (!sectionMatch) return skins;
+
+  const entryPattern = /(\d+)\s*:\s*(\d+)/g;
+  let match;
+  while ((match = entryPattern.exec(sectionMatch[1])) !== null) {
+    skins.set(parseInt(match[1], 10), parseInt(match[2], 10));
+  }
+  return skins;
+}
+
+/**
  * チャレンジ（実績）進捗を抽出
- * パターン: "ProgressForChallenges" : {1:{...},2:{...}}
+ *
+ * 新フォーマット(v1.0.x)では `New_ProgressForChallenges` セクションが
+ * 追加され、ゲーム本体はこちらを参照する。旧 `ProgressForChallenges`
+ * もマイグレーション後に保持されるため、両方をスキャンして統合する。
+ * IDが重複する場合は新セクションの値を優先する。
  */
 function extractChallenges(rawText: string): Map<number, ChallengeProgress> {
   const challenges = new Map<number, ChallengeProgress>();
 
-  // ProgressForChallengesセクションを抽出
-  const sectionMatch = rawText.match(/"ProgressForChallenges"\s*:\s*\{([\s\S]*?)\n\t\t\t\}/);
+  // 旧セクションを先に取り込む
+  const oldSection = extractChallengeSection(rawText, 'ProgressForChallenges');
+  oldSection.forEach((v, k) => challenges.set(k, v));
+
+  // 新セクションは上書き優先
+  const newSection = extractChallengeSection(rawText, 'New_ProgressForChallenges');
+  newSection.forEach((v, k) => challenges.set(k, v));
+
+  return challenges;
+}
+
+/**
+ * 指定セクション名のチャレンジ進捗を抽出するヘルパー
+ */
+function extractChallengeSection(
+  rawText: string,
+  sectionName: 'ProgressForChallenges' | 'New_ProgressForChallenges'
+): Map<number, ChallengeProgress> {
+  const result = new Map<number, ChallengeProgress>();
+
+  // セクション名を厳密に区切る (New_ProgressForChallenges を含まないように、直前が `,` か `{` を要求)
+  // 旧セクション(ProgressForChallenges)の直前は `,`、新セクションも同様。
+  const sectionRegex =
+    sectionName === 'ProgressForChallenges'
+      ? /(?:^|[,{])\s*"ProgressForChallenges"\s*:\s*\{([\s\S]*?)\n\t\t\t\}/
+      : /"New_ProgressForChallenges"\s*:\s*\{([\s\S]*?)\n\t\t\t\}/;
+
+  const sectionMatch = rawText.match(sectionRegex);
   if (!sectionMatch) {
-    return challenges;
+    return result;
   }
 
   const sectionContent = sectionMatch[1];
 
-  // 各チャレンジエントリを抽出
   // パターン: ID:{ "Value" : X, "IsCompleted" : true/false }
-  const entryPattern = /(\d+):\{\s*"Value"\s*:\s*(\d+)\s*,\s*"IsCompleted"\s*:\s*(true|false)/g;
+  const entryPattern = /(\d+):\{\s*"Value"\s*:\s*(-?\d+)\s*,\s*"IsCompleted"\s*:\s*(true|false)/g;
 
   let match;
   while ((match = entryPattern.exec(sectionContent)) !== null) {
@@ -143,10 +199,10 @@ function extractChallenges(rawText: string): Map<number, ChallengeProgress> {
     const value = parseInt(match[2], 10);
     const isCompleted = match[3] === 'true';
 
-    challenges.set(challengeId, { value, isCompleted });
+    result.set(challengeId, { value, isCompleted });
   }
 
-  return challenges;
+  return result;
 }
 
 /**
@@ -170,6 +226,15 @@ export function getCharacterLevels(rawText: string): Map<number, number> {
 export function getCharacterLevel(rawText: string, characterId: number): number | undefined {
   const ranks = extractCharacterRanks(rawText);
   return ranks.get(characterId)?.currentRank;
+}
+
+/**
+ * save_meta ファイルから現在アクティブなスロット番号を抽出
+ * フォーマット: { "active_slot" : { "__type" : "int", "value" : 4 } }
+ */
+export function extractActiveSlot(rawText: string): number | undefined {
+  const match = rawText.match(/"active_slot"\s*:\s*\{[^}]*"value"\s*:\s*(-?\d+)/);
+  return match ? parseInt(match[1], 10) : undefined;
 }
 
 /**

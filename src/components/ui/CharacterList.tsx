@@ -1,8 +1,14 @@
 import type { CharacterListProps } from '../../types';
 import { CharacterCard } from './CharacterCard';
 
-export function CharacterList({ characters, onCharacterLevelChange }: CharacterListProps) {
-  const activeCount = characters.filter(c => c.level > 0).length;
+export function CharacterList({
+  characters,
+  onCharacterLevelChange,
+  onCharacterPrestigeChange,
+  onCharacterUnlock,
+}: CharacterListProps) {
+  const unlockedCount = characters.filter((c) => !c.locked).length;
+  const lockedCount = characters.length - unlockedCount;
 
   return (
     <div>
@@ -13,7 +19,10 @@ export function CharacterList({ characters, onCharacterLevelChange }: CharacterL
             Brigade Members
           </h3>
           <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">
-            {activeCount} Active
+            {unlockedCount} Unlocked
+            {lockedCount > 0 && (
+              <span className="ml-1.5 opacity-70">&middot; {lockedCount} Locked</span>
+            )}
           </p>
         </div>
       </div>
@@ -25,14 +34,15 @@ export function CharacterList({ characters, onCharacterLevelChange }: CharacterL
             key={character.id}
             character={character}
             onLevelChange={(level) => onCharacterLevelChange(character.id, level)}
+            onPrestigeChange={
+              onCharacterPrestigeChange
+                ? (prestige) => onCharacterPrestigeChange(character.id, prestige)
+                : undefined
+            }
+            onUnlock={onCharacterUnlock ? () => onCharacterUnlock(character.id) : undefined}
           />
         ))}
 
-        {/* Add Character Button (Coming Soon) */}
-        <button className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 bg-transparent p-4 text-sm font-medium text-slate-500 dark:text-slate-400 hover:border-primary hover:text-primary hover:bg-slate-50 dark:hover:bg-surface-card transition-all">
-          <span className="material-symbols-outlined">add_circle</span>
-          Add Character Slot (Coming Soon)
-        </button>
       </div>
     </div>
   );

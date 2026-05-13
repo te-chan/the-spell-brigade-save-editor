@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo } from 'react';
-import type { SaveData, FileInfo, FileLoadStatus, Character, Achievement } from '../types';
+import type { SaveData, FileInfo, FileLoadStatus, Character, Achievement, SaveMetaInfo } from '../types';
 import { decryptES3, encryptES3 } from '../services/es3Crypto';
-import { extractSaveData } from '../services/es3Parser';
+import { extractSaveData, extractActiveSlot } from '../services/es3Parser';
 import {
   modifyGold,
   modifyCharacterRank,
@@ -9,190 +9,94 @@ import {
   addCharacterRank,
   validateModifiedSave,
 } from '../services/es3Modifier';
+import {
+  ACHIEVEMENT_METADATA,
+  CHARACTER_METADATA,
+  CHARACTER_META,
+  getSkinDisplayName,
+  getPrestigeSkin,
+} from '../data/gameMetadata';
 
-// モック実績データ（UI表示用のメタデータ）
-const ACHIEVEMENT_METADATA: Omit<Achievement, 'unlocked'>[] = [
-  // RELICS カテゴリ
-  { id: 24, name: 'Artifact 10', description: 'Revive 10 times', category: 'RELICS' },
-  { id: 41, name: 'Artifact 11', description: 'Die 30 times', category: 'RELICS' },
-  { id: 42, name: 'Artifact 12', description: 'Complete 4 objectives', category: 'RELICS' },
-  { id: 43, name: 'Artifact 13', description: 'Reach 80 armor', category: 'RELICS' },
-  { id: 44, name: 'Artifact 14', description: 'Reach 201% critical damage', category: 'RELICS' },
-  { id: 45, name: 'Artifact 15', description: 'Equip 4 different element spells', category: 'RELICS' },
-  { id: 68, name: 'Artifact 16', description: 'Stand still for 900 seconds', category: 'RELICS' },
-  { id: 69, name: 'Artifact 17', description: 'Heal from low health', category: 'RELICS' },
-  { id: 70, name: 'Artifact 18', description: 'Collect potions within timeframe', category: 'RELICS' },
-  { id: 71, name: 'Artifact 19', description: 'Level up within timeframe', category: 'RELICS' },
-  { id: 72, name: 'Artifact 20', description: 'Defeat boss without luck improvements', category: 'RELICS' },
-  { id: 22, name: 'Artifact 8', description: 'Reroll common store 5 times', category: 'RELICS' },
-  { id: 23, name: 'Artifact 9', description: 'Level up 500 times', category: 'RELICS' },
-  // WIZARDS カテゴリ
-  { id: 62, name: 'Bird Mage', description: 'Equip 50 spells', category: 'WIZARDS' },
-  { id: 19, name: 'Campanelli', description: 'Equip 86 spells', category: 'WIZARDS' },
-  { id: 74, name: 'Flute Mage', description: 'Play for 400 minutes', category: 'WIZARDS' },
-  { id: 20, name: 'Hatty', description: 'Level up 600 times', category: 'WIZARDS' },
-  { id: 16, name: 'Key Mage', description: 'Play for 240 minutes', category: 'WIZARDS' },
-  { id: 18, name: 'Ludwig', description: 'Equip 36 spells', category: 'WIZARDS' },
-  { id: 15, name: 'Moon Mage', description: 'Level up 180 times', category: 'WIZARDS' },
-  { id: 65, name: 'Plant Mage', description: 'Play for 343 minutes', category: 'WIZARDS' },
-  { id: 52, name: 'Smithy', description: 'Level up 360 times', category: 'WIZARDS' },
-  { id: 46, name: 'Star Mage', description: 'Play for 273 minutes', category: 'WIZARDS' },
-  { id: 17, name: 'Sun Mage', description: 'Play for 30 minutes', category: 'WIZARDS' },
-  { id: 77, name: 'Vampire Mage', description: 'Equip 75 spells', category: 'WIZARDS' },
-  { id: 21, name: 'Wizard King', description: 'Level up 1111 times', category: 'WIZARDS' },
-  // MISSION カテゴリ
-  { id: 84, name: 'World 4 Nightmare', description: 'Complete World 4 on Nightmare', category: 'MISSION' },
-  { id: 50, name: 'World 2 Nightmare', description: 'Complete World 2 on Nightmare', category: 'MISSION' },
-  { id: 51, name: 'World 3 Nightmare', description: 'Complete World 3 on Nightmare', category: 'MISSION' },
-  { id: 49, name: 'World 1 Nightmare', description: 'Complete World 1 on Nightmare', category: 'MISSION' },
-  { id: 82, name: 'World 4 Hard', description: 'Complete World 4 on Normal', category: 'MISSION' },
-  { id: 83, name: 'World 4 Nightmare Unlock', description: 'Complete World 4 on Hard', category: 'MISSION' },
-  { id: 8, name: 'World 2 Hard', description: 'Complete World 2 on Normal', category: 'MISSION' },
-  { id: 9, name: 'World 2 Nightmare Unlock', description: 'Complete World 2 on Hard', category: 'MISSION' },
-  { id: 10, name: 'World 3 Hard', description: 'Complete World 3 on Normal', category: 'MISSION' },
-  { id: 11, name: 'World 3 Nightmare Unlock', description: 'Complete World 3 on Hard', category: 'MISSION' },
-  { id: 6, name: 'World 1 Hard', description: 'Complete World 1 on Normal', category: 'MISSION' },
-  { id: 7, name: 'World 1 Nightmare Unlock', description: 'Complete World 1 on Hard', category: 'MISSION' },
-  { id: 4, name: 'Crystal Frostlands', description: 'Survive 12 minutes in World 1', category: 'MISSION' },
-  { id: 5, name: 'Scorched Abyss', description: 'Survive 12 minutes in World 2', category: 'MISSION' },
-  { id: 81, name: 'Astral Planes', description: 'Survive 12 minutes in World 3', category: 'MISSION' },
-  // MICS カテゴリ
-  { id: 80, name: 'Toad Boss', description: 'Defeat Toad Boss', category: 'MICS' },
-  { id: 60, name: 'Endless Mode', description: "Defeat Sol'phish", category: 'MICS' },
-  { id: 59, name: 'Peaceful Mode', description: 'Take friendly fire damage', category: 'MICS' },
-  { id: 61, name: 'Single Spell Mode', description: 'Level up spell 20 times', category: 'MICS' },
-  { id: 13, name: 'Acid Element', description: 'Perform 7 infusions', category: 'MICS' },
-  { id: 73, name: 'Dark Element', description: 'Perform 26 infusions', category: 'MICS' },
-  { id: 14, name: 'Ice Element', description: 'Perform 15 infusions', category: 'MICS' },
-  { id: 12, name: 'Lightning Element', description: 'Perform 2 infusions', category: 'MICS' },
-  { id: 1, name: 'Upgrade Tier 1', description: 'Die once', category: 'MICS' },
-  { id: 2, name: 'Upgrade Tier 2', description: 'Perform 5 upgrades', category: 'MICS' },
-  { id: 3, name: 'Upgrade Tier 3', description: 'Perform 15 upgrades', category: 'MICS' },
-  // OUTFITS カテゴリ
-  { id: 63, name: 'Bird Mage Skin 1', description: 'Two stones one bird', category: 'OUTFITS' },
-  { id: 64, name: 'Bird Mage Skin 2', description: 'Pick up 33 relics', category: 'OUTFITS' },
-  { id: 35, name: 'Campanelli Skin 1', description: 'Revive 13 times', category: 'OUTFITS' },
-  { id: 36, name: 'Campanelli Skin 2', description: 'Shoot 10 phantom blades', category: 'OUTFITS' },
-  { id: 75, name: 'Flute Mage Skin 1', description: '8 concurrent summons', category: 'OUTFITS' },
-  { id: 76, name: 'Flute Mage Skin 2', description: '12 min summon duration', category: 'OUTFITS' },
-  { id: 37, name: 'Hatty Skin 1', description: 'Augment rune burst 4 times', category: 'OUTFITS' },
-  { id: 38, name: 'Hatty Skin 2', description: 'Deal 314159 plasma damage', category: 'OUTFITS' },
-  { id: 56, name: 'Hatty Skin 3', description: 'Hide in bush 300 times', category: 'OUTFITS' },
-  { id: 31, name: 'Key Mage Skin 1', description: 'Spawn 19440 rocks', category: 'OUTFITS' },
-  { id: 32, name: 'Key Mage Skin 2', description: 'Reach 100% rock size', category: 'OUTFITS' },
-  { id: 33, name: 'Ludwig Skin 1', description: 'Venom arcane broadsword', category: 'OUTFITS' },
-  { id: 34, name: 'Ludwig Skin 2', description: 'Sacrifice 1066 times', category: 'OUTFITS' },
-];
+// 旧メタデータ定義は src/data/gameMetadata.ts に移動（ゲームから直接ダンプ）。
+// 更新方法: lab/frida/dump-all.js でリポジトリをダンプ → lab/gen-metadata.cjs を実行。
 
-// キャラクターメタデータ（UI表示用）
-// ゲーム内のCharacterIDに対応
-const CHARACTER_METADATA: Record<number, Omit<Character, 'level'>> = {
-  0: {
-    id: '0',
-    name: 'Reginald',
-    characterClass: 'Wizard',
-    maxLevel: 10,
-    iconType: 'fire',
-  },
-  1: {
-    id: '1',
-    name: 'Moon Mage',
-    characterClass: 'Lunar Wizard',
-    maxLevel: 10,
-    iconType: 'dark',
-  },
-  2: {
-    id: '2',
-    name: 'Sun Mage',
-    characterClass: 'Solar Wizard',
-    maxLevel: 10,
-    iconType: 'light',
-  },
-  3: {
-    id: '3',
-    name: 'Key Mage',
-    characterClass: 'Key Wizard',
-    maxLevel: 10,
-    iconType: 'earth',
-  },
-  4: {
-    id: '4',
-    name: 'Ludwig',
-    characterClass: 'Swordsman',
-    maxLevel: 10,
-    iconType: 'lightning',
-  },
-  5: {
-    id: '5',
-    name: 'Campanelli',
-    characterClass: 'Bell Wizard',
-    maxLevel: 10,
-    iconType: 'wind',
-  },
-  6: {
-    id: '6',
-    name: 'Hatty',
-    characterClass: 'Hat Wizard',
-    maxLevel: 10,
-    iconType: 'lightning',
-  },
-  7: {
-    id: '7',
-    name: 'Wizard King',
-    characterClass: 'King',
-    maxLevel: 10,
-    iconType: 'light',
-  },
-  8: {
-    id: '8',
-    name: 'Star Mage',
-    characterClass: 'Star Wizard',
-    maxLevel: 10,
-    iconType: 'light',
-  },
-  9: {
-    id: '9',
-    name: 'Smithy',
-    characterClass: 'Blacksmith',
-    maxLevel: 10,
-    iconType: 'fire',
-  },
-  10: {
-    id: '10',
-    name: 'Bird Mage',
-    characterClass: 'Bird Wizard',
-    maxLevel: 10,
-    iconType: 'wind',
-  },
-  11: {
-    id: '11',
-    name: 'Plant Mage',
-    characterClass: 'Plant Wizard',
-    maxLevel: 10,
-    iconType: 'earth',
-  },
-  12: {
-    id: '12',
-    name: 'Flute Mage',
-    characterClass: 'Flute Wizard',
-    maxLevel: 10,
-    iconType: 'wind',
-  },
-  13: {
-    id: '13',
-    name: 'Vampire Mage',
-    characterClass: 'Vampire Wizard',
-    maxLevel: 10,
-    iconType: 'dark',
-  },
-  99999: {
-    id: '99999',
-    name: 'Test Character',
-    characterClass: 'Test',
+// CharacterMeta を id でルックアップ（defaultSkin / rewardName 取得用）
+const CHARACTER_META_BY_ID = new Map<number, (typeof CHARACTER_META)[number]>(
+  CHARACTER_META.map((c) => [c.id, c])
+);
+
+/**
+ * パーサー結果と SelectedSkinPerCharacter / CHARACTER_META を組み合わせて
+ * UI 用 Character を生成するヘルパー。
+ *
+ * rank=undefined のときは「未アンロック」を表現する。
+ */
+function buildCharacter(
+  characterId: number,
+  rank: { currentRank: number; prestige?: number } | undefined,
+  selectedSkins: Map<number, number>
+): Character {
+  const baseMeta = CHARACTER_METADATA[characterId];
+  const repoMeta = CHARACTER_META_BY_ID.get(characterId);
+  const internalName = repoMeta?.rewardName;
+  const locked = rank === undefined;
+
+  // 装備スキン: セーブの SelectedSkinPerCharacter にあればそれ、無ければ CHARACTER_META.defaultSkin
+  const selectedSkinId =
+    selectedSkins.get(characterId) ?? repoMeta?.defaultSkin;
+  const selectedSkinName =
+    selectedSkinId !== undefined ? getSkinDisplayName(selectedSkinId) : undefined;
+  const prestigeSkinName = internalName
+    ? getPrestigeSkin(internalName)?.displayName
+    : undefined;
+
+  const common = {
+    level: rank?.currentRank ?? 1,
+    prestige: rank?.prestige,
+    internalName,
+    selectedSkinId,
+    selectedSkinName,
+    prestigeSkinName,
+    locked,
+    initialCost: repoMeta?.initialCost,
+  };
+
+  if (baseMeta) {
+    return { ...baseMeta, ...common };
+  }
+  return {
+    id: String(characterId),
+    name: `Character ${characterId}`,
+    characterClass: 'Unknown',
     maxLevel: 99,
-    iconType: 'fire',
-  },
-};
+    ...common,
+  };
+}
+
+/**
+ * 「セーブにあるキャラ」+「dumpで判明している全キャラ」のマージリストを返す
+ * (テスト用 99999 と Disabled キャラは除外)
+ */
+function buildCharacterList(
+  characterRanks: Map<number, { currentRank: number; prestige?: number }>,
+  selectedSkins: Map<number, number>
+): Character[] {
+  const allIds = new Set<number>();
+  characterRanks.forEach((_, id) => allIds.add(id));
+  CHARACTER_META.forEach((c) => {
+    if (c.id === 99999) return;
+    if (c.disabled) return;
+    allIds.add(c.id);
+  });
+
+  // SelectionOrder で安定ソート (CHARACTER_META にいないキャラは末尾)
+  const orderById = new Map<number, number>();
+  CHARACTER_META.forEach((c) => orderById.set(c.id, c.selectionOrder));
+
+  return [...allIds]
+    .sort((a, b) => (orderById.get(a) ?? 999) - (orderById.get(b) ?? 999))
+    .map((id) => buildCharacter(id, characterRanks.get(id), selectedSkins));
+}
 
 export interface UseSaveEditorReturn {
   // State
@@ -202,10 +106,18 @@ export interface UseSaveEditorReturn {
   loadStatus: FileLoadStatus;
   hasChanges: boolean;
 
+  // save_meta（任意ステップ）— 解析できれば active_slot を提示する
+  metaInfo: SaveMetaInfo | null;
+  metaError: string | null;
+
   // Actions
   loadFile: (file: File) => Promise<void>;
+  loadMetaFile: (file: File) => Promise<void>;
+  clearMeta: () => void;
   updateGold: (gold: number) => void;
   updateCharacterLevel: (characterId: string, level: number) => void;
+  updateCharacterPrestige: (characterId: string, prestige: number) => void;
+  unlockCharacter: (characterId: string) => void;
   updateAchievement: (achievementId: number, unlocked: boolean) => void;
   exportSave: () => void;
   resetChanges: () => void;
@@ -218,34 +130,18 @@ export function useSaveEditor(): UseSaveEditorReturn {
   const [fileInfo, setFileInfo] = useState<FileInfo | null>(null);
   const [loadStatus, setLoadStatus] = useState<FileLoadStatus>('idle');
 
+  // save_meta（オプション）— active_slot を表示してスロット選択を補助
+  const [metaInfo, setMetaInfo] = useState<SaveMetaInfo | null>(null);
+  const [metaError, setMetaError] = useState<string | null>(null);
+
   // rawTextからUI表示用のSaveDataを生成
   const saveData = useMemo<SaveData | null>(() => {
     if (!rawText) return null;
 
     const es3Data = extractSaveData(rawText);
 
-    // キャラクターデータを構築
-    const characters: Character[] = [];
-    es3Data.characterRanks.forEach((rank, characterId) => {
-      const metadata = CHARACTER_METADATA[characterId];
-      if (metadata) {
-        characters.push({
-          ...metadata,
-          level: rank.currentRank,
-        });
-      } else {
-        // 未知のキャラクターでもデフォルト表示
-        characters.push({
-          id: String(characterId),
-          name: `Character ${characterId}`,
-          characterClass: 'Unknown',
-          level: rank.currentRank,
-          maxLevel: 99,
-        });
-      }
-    });
+    const characters = buildCharacterList(es3Data.characterRanks, es3Data.selectedSkins);
 
-    // 実績データを構築
     const achievements: Achievement[] = ACHIEVEMENT_METADATA.map(meta => {
       const progress = es3Data.challenges.get(meta.id);
       return {
@@ -267,24 +163,7 @@ export function useSaveEditor(): UseSaveEditorReturn {
 
     const es3Data = extractSaveData(originalRawText);
 
-    const characters: Character[] = [];
-    es3Data.characterRanks.forEach((rank, characterId) => {
-      const metadata = CHARACTER_METADATA[characterId];
-      if (metadata) {
-        characters.push({
-          ...metadata,
-          level: rank.currentRank,
-        });
-      } else {
-        characters.push({
-          id: String(characterId),
-          name: `Character ${characterId}`,
-          characterClass: 'Unknown',
-          level: rank.currentRank,
-          maxLevel: 99,
-        });
-      }
-    });
+    const characters = buildCharacterList(es3Data.characterRanks, es3Data.selectedSkins);
 
     const achievements: Achievement[] = ACHIEVEMENT_METADATA.map(meta => {
       const progress = es3Data.challenges.get(meta.id);
@@ -339,6 +218,39 @@ export function useSaveEditor(): UseSaveEditorReturn {
     }
   }, []);
 
+  /**
+   * save_meta ファイルを読み込んで active_slot を抽出する。
+   * 失敗しても editor 側のロードフローは独立して継続できるようエラーは内部状態に格納するだけ。
+   */
+  const loadMetaFile = useCallback(async (file: File) => {
+    setMetaError(null);
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const decryptedData = await decryptES3(arrayBuffer);
+      const jsonString = new TextDecoder('utf-8').decode(decryptedData);
+
+      const activeSlot = extractActiveSlot(jsonString);
+      if (activeSlot === undefined) {
+        setMetaError('Could not find active_slot in this file. Is it really save_meta?');
+        return;
+      }
+
+      setMetaInfo({
+        fileName: file.name,
+        activeSlot,
+        rawText: jsonString,
+      });
+    } catch (error) {
+      console.error('Failed to decrypt save_meta:', error);
+      setMetaError('Failed to decrypt this file as save_meta.');
+    }
+  }, []);
+
+  const clearMeta = useCallback(() => {
+    setMetaInfo(null);
+    setMetaError(null);
+  }, []);
+
   // ゴールド更新
   const updateGold = useCallback((gold: number) => {
     if (!rawText) return;
@@ -357,8 +269,13 @@ export function useSaveEditor(): UseSaveEditorReturn {
 
     const numericId = parseInt(characterId, 10);
 
+    // 既存の ProgressTowardsNextRank / Prestige は保持するため、現在値を読み取る
+    const es3Data = extractSaveData(rawText);
+    const currentRank = es3Data.characterRanks.get(numericId);
+    const ptnr = currentRank?.progressTowardsNextRank ?? 0;
+
     // まず既存エントリの変更を試みる
-    let result = modifyCharacterRank(rawText, numericId, level);
+    let result = modifyCharacterRank(rawText, numericId, level, ptnr);
 
     // 存在しない場合は新規追加
     if (!result.success && result.error?.includes('not found')) {
@@ -369,6 +286,63 @@ export function useSaveEditor(): UseSaveEditorReturn {
       setRawText(result.newRawText);
     } else {
       console.error('Failed to update character level:', result.error);
+    }
+  }, [rawText]);
+
+  // Prestige 更新（新フォーマットのみ。旧セーブの場合はno-op）
+  const updateCharacterPrestige = useCallback((characterId: string, prestige: number) => {
+    if (!rawText) return;
+
+    const numericId = parseInt(characterId, 10);
+
+    const es3Data = extractSaveData(rawText);
+    const currentRank = es3Data.characterRanks.get(numericId);
+    if (!currentRank) {
+      console.error(`Character ${characterId} not found for prestige update`);
+      return;
+    }
+    // 旧フォーマット（Prestigeフィールド未存在）の場合は何もしない
+    if (currentRank.prestige === undefined) {
+      console.warn(`Save file has no Prestige field for character ${characterId}; skipping`);
+      return;
+    }
+
+    const result = modifyCharacterRank(
+      rawText,
+      numericId,
+      currentRank.currentRank,
+      currentRank.progressTowardsNextRank,
+      prestige
+    );
+    if (result.success) {
+      setRawText(result.newRawText);
+    } else {
+      console.error('Failed to update character prestige:', result.error);
+    }
+  }, [rawText]);
+
+  /**
+   * 未アンロックのキャラクターを有効化する。
+   * RankProgressPerCharacter に新規 entry を追加するだけで実質アンロック扱い。
+   * Gold は減らさない (ユーザー設定)。
+   */
+  const unlockCharacter = useCallback((characterId: string) => {
+    if (!rawText) return;
+
+    const numericId = parseInt(characterId, 10);
+
+    // 既にいる場合は no-op
+    const es3Data = extractSaveData(rawText);
+    if (es3Data.characterRanks.has(numericId)) {
+      console.warn(`Character ${characterId} is already unlocked`);
+      return;
+    }
+
+    const result = addCharacterRank(rawText, numericId, 1, 0, 0);
+    if (result.success) {
+      setRawText(result.newRawText);
+    } else {
+      console.error('Failed to unlock character:', result.error);
     }
   }, [rawText]);
 
@@ -412,9 +386,17 @@ export function useSaveEditor(): UseSaveEditorReturn {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      // .es3拡張子で保存
-      const baseName = fileInfo.name.replace(/\.(es3|sav|json)$/i, '');
-      a.download = `${baseName}_edited.es3`;
+      // 出力ファイル名:
+      //   - 新フォーマット (save_slot_N) → save_slot_N_edited (拡張子なし)
+      //   - 旧フォーマット (*.es3 等)    → <base>_edited.es3
+      const inputName = fileInfo.name;
+      if (/^save_slot_\d+$/i.test(inputName)) {
+        // 新フォーマット: そのままのスロット名 + _edited で出力（ユーザーが手動でリネームしてゲームフォルダに配置）
+        a.download = `${inputName}_edited`;
+      } else {
+        const baseName = inputName.replace(/\.(es3|sav|json)$/i, '');
+        a.download = `${baseName}_edited.es3`;
+      }
       a.click();
       URL.revokeObjectURL(url);
     } catch (error) {
@@ -438,9 +420,15 @@ export function useSaveEditor(): UseSaveEditorReturn {
     fileInfo,
     loadStatus,
     hasChanges,
+    metaInfo,
+    metaError,
     loadFile,
+    loadMetaFile,
+    clearMeta,
     updateGold,
     updateCharacterLevel,
+    updateCharacterPrestige,
+    unlockCharacter,
     updateAchievement,
     exportSave,
     resetChanges,

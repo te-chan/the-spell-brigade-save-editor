@@ -15,6 +15,8 @@ interface EditPageViewProps {
   onReset: () => void;
   onGoldChange: (gold: number) => void;
   onCharacterLevelChange: (characterId: string, level: number) => void;
+  onCharacterPrestigeChange?: (characterId: string, prestige: number) => void;
+  onCharacterUnlock?: (characterId: string) => void;
   onAchievementToggle: (achievementId: number, unlocked: boolean) => void;
 }
 
@@ -30,6 +32,8 @@ export function EditPageView({
   onReset,
   onGoldChange,
   onCharacterLevelChange,
+  onCharacterPrestigeChange,
+  onCharacterUnlock,
   onAchievementToggle,
 }: EditPageViewProps) {
   return (
@@ -78,6 +82,8 @@ export function EditPageView({
             <CharacterList
               characters={saveData.characters}
               onCharacterLevelChange={onCharacterLevelChange}
+              onCharacterPrestigeChange={onCharacterPrestigeChange}
+              onCharacterUnlock={onCharacterUnlock}
             />
           </div>
 
@@ -127,6 +133,8 @@ interface EditPageProps {
   onReset: () => void;
   onGoldChange: (gold: number) => void;
   onCharacterLevelChange: (characterId: string, level: number) => void;
+  onCharacterPrestigeChange?: (characterId: string, prestige: number) => void;
+  onCharacterUnlock?: (characterId: string) => void;
   onAchievementToggle: (achievementId: number, unlocked: boolean) => void;
 }
 
@@ -138,6 +146,8 @@ export function EditPage({
   onReset,
   onGoldChange,
   onCharacterLevelChange,
+  onCharacterPrestigeChange,
+  onCharacterUnlock,
   onAchievementToggle,
 }: EditPageProps) {
   const navigate = useNavigate();
@@ -186,6 +196,8 @@ export function EditPage({
       onReset={onReset}
       onGoldChange={onGoldChange}
       onCharacterLevelChange={onCharacterLevelChange}
+      onCharacterPrestigeChange={onCharacterPrestigeChange}
+      onCharacterUnlock={onCharacterUnlock}
       onAchievementToggle={onAchievementToggle}
     />
   );

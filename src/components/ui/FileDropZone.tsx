@@ -1,8 +1,29 @@
 import { useCallback, useState } from 'react';
 import type { FileDropZoneProps } from '../../types';
 
-export function FileDropZone({ onFileDrop, isLoading = false }: FileDropZoneProps) {
+export function FileDropZone({ onFileDrop, isLoading = false, mode = 'legacy', hintActiveSlot }: FileDropZoneProps) {
   const [isDragging, setIsDragging] = useState(false);
+
+  // モード別の文言定義
+  const headline = isLoading
+    ? 'Loading...'
+    : mode === 'meta'
+      ? 'Drop your save_meta file'
+      : mode === 'slot'
+        ? hintActiveSlot !== undefined
+          ? `Drop save_slot_${hintActiveSlot} (your active slot)`
+          : 'Drop a save_slot_N file'
+        : 'Drop your save_slot_N file here';
+
+  const subline = mode === 'meta'
+    ? 'Tells the editor which slot is currently active'
+    : mode === 'slot'
+      ? hintActiveSlot !== undefined
+        ? `Active slot detected: ${hintActiveSlot} — any save_slot_N also works`
+        : 'Pick the slot you want to edit'
+      : 'or tap to browse your device — legacy .es3 saves also supported';
+
+  const iconName = mode === 'meta' ? 'fact_check' : 'cloud_upload';
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -49,24 +70,24 @@ export function FileDropZone({ onFileDrop, isLoading = false }: FileDropZoneProp
       {/* Icon Circle */}
       <div className="size-20 rounded-full bg-surface-dark flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
         <span className="material-symbols-outlined text-primary text-4xl">
-          {isLoading ? 'hourglass_empty' : 'cloud_upload'}
+          {isLoading ? 'hourglass_empty' : iconName}
         </span>
       </div>
 
       <div className="flex max-w-[480px] flex-col items-center gap-2 z-10">
         <p className="text-slate-900 dark:text-white text-xl font-bold leading-tight tracking-tight text-center">
-          {isLoading ? 'Loading...' : 'Drop your .es3 file here'}
+          {headline}
         </p>
         <p className="text-slate-500 dark:text-slate-400 text-sm font-normal leading-normal text-center">
-          or tap to browse your device
+          {subline}
         </p>
       </div>
 
       <label className="flex min-w-[120px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-6 bg-surface-dark border border-surface-border text-white text-sm font-bold leading-normal tracking-wide hover:bg-primary hover:border-primary transition-colors shadow-md">
         <span className="truncate">Select File</span>
+        {/* No accept filter — v1.0.x saves have no extension (save_slot_N), legacy saves use .es3 */}
         <input
           type="file"
-          accept=".es3"
           className="hidden"
           onChange={handleFileSelect}
           disabled={isLoading}

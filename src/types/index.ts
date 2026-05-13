@@ -36,6 +36,20 @@ export interface Character {
   maxLevel: number;
   avatarUrl?: string;
   iconType?: CharacterIconType;
+  // 新フォーマット(v1.0.x)で導入された Prestige。旧セーブでは undefined
+  prestige?: number;
+  // 内部キャラ名 (CHARACTER_META.rewardName)。スキン検索等に使用
+  internalName?: string;
+  // 装備中スキンID（SelectedSkinPerCharacter）。未設定なら defaultSkin
+  selectedSkinId?: number;
+  // 装備中スキンの表示名（解決済み）。例: "Bell Mage — Variant 1"
+  selectedSkinName?: string;
+  // このキャラの Prestige スキン表示名（unlocked 判定はprestige>0で UI 側）
+  prestigeSkinName?: string;
+  // RankProgressPerCharacter に entry が無い = まだロック中
+  locked?: boolean;
+  // ロック中のときに表示する解除コスト (Gold)。CHARACTER_META.initialCost 由来
+  initialCost?: number;
 }
 
 // キャラクターアイコンタイプ
@@ -46,6 +60,14 @@ export interface FileInfo {
   name: string;
   size: number;
   lastModified: Date;
+}
+
+// save_meta の解析結果
+export interface SaveMetaInfo {
+  fileName: string;
+  activeSlot: number;
+  // 後で active_slot を書き換えてエクスポートしたい場合に備え rawText を保持
+  rawText: string;
 }
 
 // ファイル読み込み状態
@@ -112,9 +134,14 @@ export interface LevelSliderProps {
 }
 
 // FileDropZone
+export type FileDropZoneMode = 'meta' | 'slot' | 'legacy';
+
 export interface FileDropZoneProps {
   onFileDrop: (file: File) => void;
   isLoading?: boolean;
+  mode?: FileDropZoneMode;
+  // mode='slot' のときに表示する「推奨スロット番号」(active_slot)
+  hintActiveSlot?: number;
 }
 
 // FileInfoCard
@@ -135,12 +162,16 @@ export interface GoldEditorProps {
 export interface CharacterCardProps {
   character: Character;
   onLevelChange: (level: number) => void;
+  onPrestigeChange?: (prestige: number) => void;
+  onUnlock?: () => void;
 }
 
 // CharacterList
 export interface CharacterListProps {
   characters: Character[];
   onCharacterLevelChange: (characterId: string, level: number) => void;
+  onCharacterPrestigeChange?: (characterId: string, prestige: number) => void;
+  onCharacterUnlock?: (characterId: string) => void;
 }
 
 // AchievementEditor

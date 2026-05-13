@@ -29,6 +29,10 @@ export function modifyGold(rawText: string, newValue: number): ModificationResul
 /**
  * チャレンジ（実績）の進捗を変更
  * パターン: 1:{ "Value" : 1, "IsCompleted" : true }
+ *
+ * 新フォーマット(v1.0.x)では同じIDが ProgressForChallenges と
+ * New_ProgressForChallenges の両方に存在する場合がある。ゲーム本体は
+ * 新セクションを参照するため、見つかった全エントリを更新する。
  */
 export function modifyChallengeProgress(
   rawText: string,
@@ -36,34 +40,41 @@ export function modifyChallengeProgress(
   newValue: number,
   isCompleted: boolean
 ): ModificationResult {
-  // ProgressForChallengesセクション内で、特定IDのエントリを見つける
-  // フォーマット: },ID:{ ... "Value" : X, ... "IsCompleted" : true/false ... }
+  // フォーマット: {ID:{...} または },ID:{ ... "Value" : X, ... "IsCompleted" : true/false ... }
+  // セクション先頭エントリは `{` に続くため `[\{,]` を境界として許可する
   const pattern = new RegExp(
-    `((?:^|,)${challengeId}:\\{[^}]*"Value"\\s*:\\s*)(\\d+)([^}]*"IsCompleted"\\s*:\\s*)(true|false)`,
-    's'
+    `((?:^|[\\{,])${challengeId}:\\{[^}]*"Value"\\s*:\\s*)(-?\\d+)([^}]*"IsCompleted"\\s*:\\s*)(true|false)`,
+    'gs'
   );
 
   if (!pattern.test(rawText)) {
     return { success: false, newRawText: rawText, error: `Challenge ${challengeId} not found` };
   }
 
+  // g フラグ付きで全マッチを置換（旧・新両セクションのエントリを更新）
+  pattern.lastIndex = 0;
   const newRawText = rawText.replace(pattern, `$1${newValue}$3${isCompleted}`);
   return { success: true, newRawText };
 }
 
 /**
  * キャラクターランクを変更（既存エントリのみ）
- * パターン: 0:{ "CurrentRank" : 10, "ProgressTowardsNextRank" : 0 }
+ * 旧: { "CurrentRank" : 10, "ProgressTowardsNextRank" : 0 }
+ * 新: { "CurrentRank" : 10, "ProgressTowardsNextRank" : 0.99, "Prestige" : N }
+ *
+ * `prestige` を指定した場合のみ Prestige 値も更新する。
  */
 export function modifyCharacterRank(
   rawText: string,
   characterId: number,
   currentRank: number,
-  progressTowardsNextRank: number = 0
+  progressTowardsNextRank: number = 0,
+  prestige?: number
 ): ModificationResult {
-  // RankProgressPerCharacterセクション内で、特定IDのエントリを見つける
+  // 浮動小数点の ProgressTowardsNextRank (0.99 等) を捕捉できるようにする
+  // セクション先頭エントリ (ID:{ の直前が `{`) と それ以外 (直前が `,`) の両方に対応
   const pattern = new RegExp(
-    `((?:^|,)${characterId}:\\{[^}]*"CurrentRank"\\s*:\\s*)(\\d+)([^}]*"ProgressTowardsNextRank"\\s*:\\s*)(\\d+)`,
+    `((?:^|[\\{,])${characterId}:\\{[^}]*"CurrentRank"\\s*:\\s*)(\\d+)([^}]*"ProgressTowardsNextRank"\\s*:\\s*)(-?\\d+(?:\\.\\d+)?)`,
     's'
   );
 
@@ -71,52 +82,71 @@ export function modifyCharacterRank(
     return { success: false, newRawText: rawText, error: `Character ${characterId} not found` };
   }
 
-  const newRawText = rawText.replace(pattern, `$1${currentRank}$3${progressTowardsNextRank}`);
+  let newRawText = rawText.replace(pattern, `$1${currentRank}$3${progressTowardsNextRank}`);
+
+  // Prestige 指定があれば併せて更新（既存エントリにPrestigeフィールドがある場合のみ）
+  if (prestige !== undefined) {
+    const prestigePattern = new RegExp(
+      `((?:^|[\\{,])${characterId}:\\{[^}]*"Prestige"\\s*:\\s*)(\\d+)`,
+      's'
+    );
+    if (prestigePattern.test(newRawText)) {
+      newRawText = newRawText.replace(prestigePattern, `$1${prestige}`);
+    }
+  }
+
   return { success: true, newRawText };
 }
 
 /**
  * 新しいキャラクターランクエントリを追加
  * RankProgressPerCharacterセクションに新規エントリを挿入
+ *
+ * 新フォーマット(v1.0.x)では Prestige フィールドが必須なので、
+ * 既存エントリに Prestige があるかを検出して同じ形式で追加する。
  */
 export function addCharacterRank(
   rawText: string,
   characterId: number,
   currentRank: number,
-  progressTowardsNextRank: number = 0
+  progressTowardsNextRank: number = 0,
+  prestige: number = 0
 ): ModificationResult {
-  // 既に存在するか確認
-  const existsPattern = new RegExp(`(?:^|,)${characterId}:\\{[^}]*"CurrentRank"`, 's');
+  // 既に存在するか確認（セクション先頭エントリ も検出するため `[\{,]` を境界として許可）
+  const existsPattern = new RegExp(`(?:^|[\\{,])${characterId}:\\{[^}]*"CurrentRank"`, 's');
   if (existsPattern.test(rawText)) {
     return { success: false, newRawText: rawText, error: `Character ${characterId} already exists` };
   }
 
-  // RankProgressPerCharacterセクションの終端を見つける
-  // パターン: "RankProgressPerCharacter" : {0:{...},1:{...},2:{...}
-  //                                                              ^ ここに追加
-  // 終端の } の前に挿入
-
-  // まずセクションを見つける
   const sectionPattern = /"RankProgressPerCharacter"\s*:\s*\{/;
   if (!sectionPattern.test(rawText)) {
     return { success: false, newRawText: rawText, error: 'RankProgressPerCharacter section not found' };
   }
 
-  // セクション内の最後のエントリの後に追加
-  // },[space/newline] の後に追加する
-  // 実際のフォーマットを維持するため、既存エントリのフォーマットを参考にする
+  // 新フォーマット判定: セクション内に "Prestige" が現れるか
+  const sectionContentMatch = rawText.match(/"RankProgressPerCharacter"\s*:\s*\{([\s\S]*?)\n\t\t\t\}/);
+  const hasPrestige = sectionContentMatch
+    ? /"Prestige"\s*:\s*\d+/.test(sectionContentMatch[1])
+    : false;
 
-  // RankProgressPerCharacter セクションの末尾を見つける
-  // フォーマット: ...ProgressTowardsNextRank" : 0\n\t\t\t}\n\t\t},
-  const endPattern = /("RankProgressPerCharacter"\s*:\s*\{[\s\S]*?"ProgressTowardsNextRank"\s*:\s*\d+\s*\})\s*(\})/;
+  // セクションの最終エントリの } と、セクション全体の } を捕捉する
+  // 旧: ...ProgressTowardsNextRank" : N\n\t\t\t}\n\t\t}
+  // 新: ...Prestige" : N\n\t\t\t}\n\t\t}
+  const endPattern = hasPrestige
+    ? /("RankProgressPerCharacter"\s*:\s*\{[\s\S]*?"Prestige"\s*:\s*\d+\s*\})(\s*\})/
+    : /("RankProgressPerCharacter"\s*:\s*\{[\s\S]*?"ProgressTowardsNextRank"\s*:\s*-?\d+(?:\.\d+)?\s*\})(\s*\})/;
 
-  const match = rawText.match(endPattern);
-  if (!match) {
+  if (!endPattern.test(rawText)) {
     return { success: false, newRawText: rawText, error: 'Could not find RankProgressPerCharacter section end' };
   }
 
-  // 新しいエントリを作成（既存のフォーマットに合わせる）
-  const newEntry = `,${characterId}:{
+  const newEntry = hasPrestige
+    ? `,${characterId}:{
+				"CurrentRank" : ${currentRank},
+				"ProgressTowardsNextRank" : ${progressTowardsNextRank},
+				"Prestige" : ${prestige}
+			}`
+    : `,${characterId}:{
 				"CurrentRank" : ${currentRank},
 				"ProgressTowardsNextRank" : ${progressTowardsNextRank}
 			}`;

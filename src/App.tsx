@@ -8,9 +8,15 @@ function AppContent() {
     fileInfo,
     loadStatus,
     hasChanges,
+    metaInfo,
+    metaError,
     loadFile,
+    loadMetaFile,
+    clearMeta,
     updateGold,
     updateCharacterLevel,
+    updateCharacterPrestige,
+    unlockCharacter,
     updateAchievement,
     exportSave,
     resetChanges,
@@ -24,7 +30,11 @@ function AppContent() {
           <DropPage
             fileInfo={fileInfo}
             loadStatus={loadStatus}
+            metaInfo={metaInfo}
+            metaError={metaError}
             onFileDrop={loadFile}
+            onMetaFileDrop={loadMetaFile}
+            onClearMeta={clearMeta}
             onExportSave={exportSave}
           />
         }
@@ -39,6 +49,8 @@ function AppContent() {
             onReset={resetChanges}
             onGoldChange={updateGold}
             onCharacterLevelChange={updateCharacterLevel}
+            onCharacterPrestigeChange={updateCharacterPrestige}
+            onCharacterUnlock={unlockCharacter}
             onAchievementToggle={updateAchievement}
           />
         }
